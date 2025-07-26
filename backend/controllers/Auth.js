@@ -256,7 +256,6 @@ export const resendOtp = async (req, res) => {
 export const getUserData = async (email) => {
     try {
         const user = await Buyer.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'orders' }) || await Seller.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'products' })
-        console.log("User Data : ", user)
         if (user?.verified !== true || !user) {
             throw new Error("User not found");
         } else {

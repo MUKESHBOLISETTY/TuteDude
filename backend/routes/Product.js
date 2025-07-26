@@ -10,8 +10,8 @@ import { getProducts } from '../middleware/ServerSentUpdates.js';
 const router = express.Router();
 
 router.post('/createProduct', authenticateUser, createProduct);
-router.put('/:id', updateProduct);
-router.delete('/:id', deleteProduct);
-router.get('/getProducts', authenticateUser, getProducts); // Uncomment if needed  
+router.post('/updateProduct/:id', authenticateUser, updateProduct);
+router.delete('/deleteProduct/:id', authenticateUser, deleteProduct);
+router.get('/getProducts', getProducts); 
 
 export default router;

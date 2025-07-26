@@ -184,12 +184,20 @@ export const authApi = {
   updateAddress: (addressId, data) => apiService.post('/auth/updateAddress', { addressId, data }),
   deleteAddress: (addressId) => apiService.put('/auth/deleteAddress', { addressId }),
 
- 
+
 }
 
 export const OrderApi = {
   createOrder:(data)=> apiService.post('/orders/createOrder',data),
   updateStatus:(orderId,newStatus) => apiService.put('/orders/updateStatus',{orderId,newStatus})
+
+}
+export const productsApi = {
+  // Products Management
+  addProduct: (data) => apiService.post('/product/createProduct', data),
+  updateProduct: (id, data) => apiService.post(`/product/updateProduct/${id}`, data),
+  deleteProduct: (id) => apiService.delete(`/product/deleteProduct/${id}`)
+
 }
 
 export default apiService; 
