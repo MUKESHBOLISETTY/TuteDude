@@ -13,6 +13,9 @@ const sellerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    token: {
+      type: String,
+    },
     email: {
       type: String,
       required: true,
@@ -26,6 +29,11 @@ const sellerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     alternatePhoneNumber: {
       type: String,
       trim: true,
@@ -35,6 +43,14 @@ const sellerSchema = new mongoose.Schema(
       city: { type: String, trim: true },
       state: { type: String, trim: true },
       zipCode: { type: String, trim: true },
+    },
+    forgottoken: {
+      type: String,
+      default: null
+    },
+    type: {
+      type: String,
+      required
     },
 
     // II. Business Details
@@ -186,6 +202,12 @@ const sellerSchema = new mongoose.Schema(
       instagram: { type: String, trim: true },
       website: { type: String, trim: true },
     },
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      }
+    ]
   },
   {
     timestamps: true, // Automatically manages createdAt and updatedAt
