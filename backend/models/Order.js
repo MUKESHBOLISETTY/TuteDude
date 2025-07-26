@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-// import { sendOrdersUpdate } from "../controllers/OrderManagement.js";
+import { sendOrdersUpdate } from "../controllers/Order.js";
 
 const orderSchema = new mongoose.Schema(
     {
         orderId: { type: String, required: true },
         customer: {
             customerName: { type: String, required: true },
-            customerId: { type: String, required: true },
+            customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Buyer" },
             customerEmail: { type: String, required: true },
             customerPhoneNumber: { type: String, required: true }
         },

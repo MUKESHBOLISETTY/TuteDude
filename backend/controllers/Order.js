@@ -1,4 +1,5 @@
-import { User } from '../models/User.js';
+
+import { Buyer } from '../models/Buyer.js';
 import { Order } from '../models/Order.js';
 import uniqid from 'uniqid';
 import errorHandler from '../utils/errorHandler.js';
@@ -7,14 +8,16 @@ const orderClients = new Set();
 
 export const createOrder = async (req, res) => {
     try {
-        const { delivery, orderlist, subtotal, totalprice } = req.body;
-        if (!delivery.address || !orderlist || !delivery.distance || !delivery.deliveryfee || !delivery.paymentmethod) {
+        const { delivery, orderlist, subtotal, totalprice,deliveryStatus } = req.body;
+      
+        if (!delivery.address || !orderlist || !delivery.distance || !delivery.deliveryfee || !delivery.paymentmethod || !deliveryStatus) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required",
             })
         }
-        const user = await User.findOne({ email: req.user.email })
+        const user = await Buyer.findOne({ email: req.user.email })
+    
         const order = await Order.create({
             orderId: uniqid(),
             customer: {
@@ -27,15 +30,18 @@ export const createOrder = async (req, res) => {
                 address: delivery.address,
                 distance: delivery.distance,
                 deliveryfee: delivery.deliveryfee,
+                sellerId: delivery.sellerId,
+                deliveredOn: delivery.deliveredOn,
                 paymentmethod: delivery.paymentmethod
             },
             items: orderlist,
             subtotal,
             totalprice,
             status: "pending",
+            deliveryStatus,
 
         })
-        const u = await User.findByIdAndUpdate(user._id, { $push: { orders: order._id } });
+        const u = await Buyer.findByIdAndUpdate(user._id, { $push: { orders: order._id } });
         await u.save()
         return res.status(200).json({
             success: true,
@@ -63,7 +69,7 @@ export const deleteOrder = async (req, res) => {
         if (!order) {
             return res.status(404).json({ success: false, message: "Order not found." });
         }
-        await User.findByIdAndUpdate(userId, { $pull: { orders: orderId } });
+        await Buyer.findByIdAndUpdate(userId, { $pull: { orders: orderId } });
 
         return res.status(200).json({
             success: true,
@@ -79,28 +85,32 @@ export const deleteOrder = async (req, res) => {
 
 export const updateStatus = async (req, res) => {
     try {
-        if (req.user.type === "deliveryagent" || req.user.type === "admin") {
-            const { orderId, status } = req.body;
-            if (!orderId || !status) {
+       
+            const { orderId, newStatus,deliveryStatus } = req.body;
+            console.log("Req.body;",req.body)
+            if (!orderId || (!newStatus && !deliveryStatus)) {
                 return res.status(400).json({
                     success: false,
                     message: "All fields are required",
                 })
             }
             const order = await Order.findById(orderId);
+
             if (!order) {
                 return res.status(404).json({ success: false, message: "Order not found." });
             }
-            order.status = status;
+            
+           if (newStatus) order.status = newStatus;
+           if (deliveryStatus) order.deliveryStatus = deliveryStatus;
+
             await order.save();
+ 
 
             return res.status(200).json({
                 success: true,
                 message: 'order-status-updated'
             });
-        } else {
-            return errorHandler(res)
-        }
+        
     } catch (error) {
         return errorHandler(res)
     }
@@ -120,7 +130,7 @@ export const updateDeliveryAgent = async (req, res) => {
             if (!order) {
                 return res.status(404).json({ success: false, message: "Order not found." });
             }
-            const deliveryAgent = await User.findById(deliveryagentId)
+            const deliveryAgent = await Buyer.findById(deliveryagentId)
             if (!deliveryAgent) {
                 return res.status(404).json({ success: false, message: "Delivery Agent not found." });
             }

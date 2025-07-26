@@ -19,22 +19,22 @@ const RecentOrders = () => {
       <div className="p-6">
         <div className="space-y-4">
           {recentOrders.map((order) => (
-            <div key={order.id} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
+            <div key={order.orderId} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-gray-900">{order.id}</h4>
+                  <h4 className="font-medium text-gray-900">{order.orderId}</h4>
                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${getOrderStatusColor(order.status)}`}>
                     {order.status}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mb-1">{order.vendorName}</p>
+                <p className="text-sm text-gray-600 mb-1">{order.customer.customerName}</p>
                 <p className="text-xs text-gray-500">
-                  {order.items.length} item{order.items.length !== 1 ? 's' : ''} • {formatDateTime(order.orderDate)}
+                  {order.items.length} item{order.items.length !== 1 ? 's' : ''} • {formatDateTime(order.delivery.deliveredOn)}
                 </p>
               </div>
               <div className="text-right ml-4">
                 <p className="text-lg font-semibold text-gray-900">
-                  {formatCurrency(order.total)}
+                  {formatCurrency(order.totalprice)}
                 </p>
                 <p className="text-xs text-gray-500">
                   {order.status === 'pending' ? 'ordered' : order.deliveryStatus}
