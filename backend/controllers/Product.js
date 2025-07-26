@@ -1,3 +1,4 @@
+import { sendUserUpdater } from '../middleware/ServerSentUpdates.js';
 import { Product } from '../models/Product.js';
 import { Seller } from '../models/Seller.js';
 
@@ -89,7 +90,7 @@ export const createProduct = async (req, res) => {
       req.user._id,
       { $push: { products: product._id } }
     );
-
+    await sendUserUpdater(req.user.email)
     // Return success response
     return res.status(201).json({
       success: true,
@@ -101,6 +102,7 @@ export const createProduct = async (req, res) => {
         updatedAt: product.updatedAt
       }
     });
+
 
   } catch (error) {
     console.error('Create Product Error:', error);
@@ -164,31 +166,160 @@ export const getProductsData = async (req, res) => {
 };
 
 
-
 // Update a product
 export const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+    const productId = req.params.id;
+    const {
+      name,
+      category,
+      price,
+      unit,
+      stock,
+      minOrderQty,
+      expiryDate,
+      qualityScore,
+      bulkDiscounts,
+      origin
+    } = req.body;
+
+    // Check if product exists
+    const existingProduct = await Product.findById(productId);
+    if (!existingProduct) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
+
+    // Required field validation
+    const requiredFields = { name, category, price, unit, stock, minOrderQty, expiryDate, origin };
+    const missingFields = Object.entries(requiredFields)
+      .filter(([_, value]) => !value && value !== 0)
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required fields: ${missingFields.join(', ')}`
+      });
+    }
+
+    // Validate price and quantities
+    if (price <= 0 || stock < 0 || minOrderQty <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Price and quantities must be positive numbers'
+      });
+    }
+
+    // Validate unit
+    const validUnits = ['kg', 'g', 'l', 'ml', 'pieces'];
+    if (!validUnits.includes(unit)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid unit. Must be one of: ' + validUnits.join(', ')
+      });
+    }
+
+    // Validate bulk discounts if provided
+    if (bulkDiscounts && bulkDiscounts.length > 0) {
+      const isValidDiscounts = bulkDiscounts.every(discount =>
+        discount.minQty > 0 &&
+        discount.discount > 0 &&
+        discount.discount < 100
+      );
+
+      if (!isValidDiscounts) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid bulk discount configuration'
+        });
+      }
+    }
+
+    // Update product data
+    const updatedProductData = {
+      name,
+      category,
+      price,
+      unit,
+      stock,
+      minOrderQty,
+      expiryDate: new Date(expiryDate),
+      qualityScore: qualityScore || existingProduct.qualityScore,
+      origin,
+      bulkDiscounts: bulkDiscounts || existingProduct.bulkDiscounts,
+      isExpired: new Date() > new Date(expiryDate)
+    };
+
+    // Update the product
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updatedProductData,
       { new: true, runValidators: true }
     );
-    if (!product) return res.status(404).json({ error: 'Product not found' });
-    res.json(product);
+    await sendUserUpdater(req.user.email)
+
+    return res.status(200).json({
+      success: true,
+      message: 'Product updated successfully',
+      product: updatedProduct
+    });
+
   } catch (error) {
     console.error('Update Product Error:', error);
-    res.status(400).json({ error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Error updating product'
+    });
   }
 };
 
 // Delete a product
 export const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) return res.status(404).json({ error: 'Product not found' });
-    res.json({ message: 'Product deleted successfully' });
+    const productId = req.params.id;
+
+    // Check if product exists and belongs to the seller
+    const product = await Product.findOne({
+      _id: productId,
+      seller: req.user._id
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found or unauthorized'
+      });
+    }
+
+    // Remove product from seller's products array
+    await Seller.findByIdAndUpdate(
+      req.user._id,
+      { $pull: { products: productId } }
+    );
+
+    // Delete the product
+    await Product.findByIdAndDelete(productId);
+
+    // Send real-time update to seller
+    await sendUserUpdater(req.user.email);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully',
+      deletedProduct: {
+        id: product._id,
+        name: product.name
+      }
+    });
+
   } catch (error) {
-    console.error('Delete Product Error:', error);
-    res.status(500).json({ error: 'Failed to delete product' });
+    console.log('Delete Product Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to delete product'
+    });
   }
 };
