@@ -6,6 +6,8 @@ import { cloudinaryConnect } from './config/cloudinary.js';
 import fileUpload from 'express-fileupload';
 import userRoutes from './routes/User.js';
 import productRoutes from './routes/Product.js';
+import orderRoutes from './routes/Order.js';
+
 const app = express();
 const port = 4000;
 
@@ -27,10 +29,12 @@ app.use(
   })
 );
 
+
 cloudinaryConnect();
 
 app.use("/api/v1/auth",userRoutes);
 app.use("/api/v1/product", productRoutes);
+app.use("/api/v1/orders",orderRoutes);
 
 app.get('/', (req, res) => {
   return res.json({
