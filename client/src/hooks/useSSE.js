@@ -47,10 +47,11 @@ export const useSSE = () => {
         eventSource.addEventListener('user_update', (event) => {
             try {
                 const data = JSON.parse(event.data);
+                dispatch(setLoading(true))
                 console.log('Received user update (SSE):', data);
                 dispatch(setUser(data));
-                dispatch(setProducts(data.products || []));
-                dispatch(setFilteredProducts(data.filteredProducts || []));
+                dispatch(setProducts(data.products));
+                dispatch(setFilteredProducts(data.filteredProducts));
                 dispatch(setLoading(false))
             } catch (e) {
                 console.error('Error parsing user update SSE data:', e);
