@@ -144,9 +144,9 @@ export const updateDeliveryAgent = async (req, res) => {
     }
 }
 // ORDERS SSE STREAM
-const getOrdersData = async () => {
+export const getOrdersData = async () => {
     try {
-        const orders = await Order.find().populate({ path: 'delivery.deliveryagentId' })
+        const orders = await Order.find()
         if (!orders) {
             throw new Error("No Orders Found");
         } else {

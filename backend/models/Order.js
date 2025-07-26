@@ -3,10 +3,7 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
     {
-        orderId: {
-            type: String,
-            required: true
-        },
+        orderId: { type: String, required: true },
         customer: {
             customerName: { type: String, required: true },
             customerId: { type: String, required: true },
@@ -17,6 +14,7 @@ const orderSchema = new mongoose.Schema(
             address: { type: String, required: true },
             distance: { type: Number, required: true },
             deliveryfee: { type: Number, required: true },
+            sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "Seller" },
             deliveredOn: { type: Date, default: null },
             paymentmethod: { type: String, enum: ["payondelivery", "upi"], required: true },
         },
@@ -33,10 +31,10 @@ const orderSchema = new mongoose.Schema(
             default: "pending",
             required: true
         },
-        deliveryStatus:{
-            type:String,
-            enum:["pending","packed","shipped","delivered"],
-            default:"pending",
+        deliveryStatus: {
+            type: String,
+            enum: ["pending", "packed", "shipped", "delivered"],
+            default: "pending",
             required: true,
         }
     },

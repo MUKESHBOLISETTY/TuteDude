@@ -13,10 +13,18 @@ import Delivery from './pages/supplier/Delivery';
 import Earnings from './pages/supplier/Earnings';
 import NotFound from "./pages/NotFound";
 import { useDispatch, useSelector } from 'react-redux';
-
+import useSSE from './hooks/useSSE';
 
 function App() {
   const { token, user } = useSelector((state) => state.auth);
+  const { setupUserSSE } = useSSE()
+  useEffect(() => {
+    if (token) {
+      const cleanup = setupUserSSE();
+      return cleanup;
+    }
+  }, [token, setupUserSSE]);
+
   return (
     <Provider store={store}>
       <Router>
