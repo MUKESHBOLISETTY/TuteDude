@@ -15,9 +15,24 @@ import NotFound from "./pages/NotFound";
 import { useDispatch, useSelector } from 'react-redux';
 import useSSE from './hooks/useSSE';
 import toast, { Toaster } from 'react-hot-toast';
+const SellerRoute = ({ children }) => {
+  const { user } = useSelector((state) => state.auth);
+
+  if (!user) {
+    return <Navigate to="/auth/login" />;
+  }
+
+  if (user.type !== 'Seller') {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+};
+
 function App() {
   const { token, user } = useSelector((state) => state.auth);
   const { setupUserSSE } = useSSE()
+
   useEffect(() => {
     if (token) {
       const cleanup = setupUserSSE();
@@ -36,13 +51,18 @@ function App() {
           <Route path="/auth/verifyotp/:email" element={<VerifyOTP />} />
 
           <Route path="/" element={<Navigate to="/supplier" replace />} />
-          <Route path="/supplier" element={<SupplierLayout />}>
+          <Route path="/supplier" element={
+            <SellerRoute>
+              <SupplierLayout />
+            </SellerRoute>
+          }>
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
             <Route path="orders" element={<Orders />} />
             <Route path="delivery" element={<Delivery />} />
             <Route path="earnings" element={<Earnings />} />
           </Route>
+
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />

@@ -127,7 +127,7 @@ export const signup = async (req, res) => {
         const phone = parseInt(phonenumber);
         if (type == 'Seller') {
             await Seller.create({
-                token: freshtoken, username, email, phonenumber: phone, password: hashedPassword, type: 'Seller', image: imageUrl ? imageUrl : `http://api.dicebear.com/5.x/initials/svg?seed=${username}`, verified: false
+                token: freshtoken, sellerName: username, email, phoneNumber: phone, password: hashedPassword, type: 'Seller', profilePictureUrl: imageUrl ? imageUrl : `http://api.dicebear.com/5.x/initials/svg?seed=${username}`, verified: false
             })
         } else if (type == 'Buyer') {
             await Buyer.create({

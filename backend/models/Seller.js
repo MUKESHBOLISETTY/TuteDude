@@ -9,11 +9,6 @@ const sellerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    contactPersonName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     token: {
       type: String,
     },
@@ -58,7 +53,6 @@ const sellerSchema = new mongoose.Schema(
     businessType: {
       type: String,
       enum: ['Wholesaler', 'Distributor', 'Farmer', 'Manufacturer', 'Retailer'],
-      required: true,
     },
     yearsInBusiness: {
       type: Number,
@@ -154,11 +148,10 @@ const sellerSchema = new mongoose.Schema(
     },
 
     // VI. Account & Security
-    username: {
+    password: {
       type: String,
       required: true,
-      unique: true,
-      trim: true,
+      minlength: 8, 
     },
     // password: { type: String, required: true }, // Handle securely via auth service
     profilePictureUrl: {
