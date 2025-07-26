@@ -113,9 +113,19 @@ export const useOrders = () => {
         }
     }
 
+    const createOrder = async(data) => {
+        try{
+            const response = await OrderApi.createOrder(data);
+            return response;
+
+        }catch(error){
+            console.error("Error in frontend cretainng order:",error)
+        }
+    }
+
     return {
         setupOrdersSSE,
-        updateStatus
+        updateStatus,createOrder
     };
 }
 

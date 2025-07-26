@@ -7,17 +7,20 @@ import { formatCurrency, formatDateTime, getDeliveryStatusColor } from '../../li
 const Delivery = () => {
   const dispatch = useDispatch();
   const { deliveries } = useSelector(state => state.deliveries);
+  const { orders } = useSelector(state => state.orders);
   const [selectedDelivery, setSelectedDelivery] = useState(null);
+
+  const filteredDeliveries = orders.filter((o)=> o.status === 'confirmed')
 
   const handleStatusUpdate = (orderId, status) => {
     dispatch(updateDeliveryStatus({ orderId, status }));
   };
 
   const deliveryStats = {
-    pending: deliveries.filter(d => d.deliveryStatus === 'pending').length,
-    packed: deliveries.filter(d => d.deliveryStatus === 'packed').length,
-    shipped: deliveries.filter(d => d.deliveryStatus === 'shipped').length,
-    delivered: deliveries.filter(d => d.deliveryStatus === 'delivered').length,
+    pending: filteredDeliveries.filter(d => d.deliveryStatus === 'pending').length,
+    packed: filteredDeliveries.filter(d => d.deliveryStatus === 'packed').length,
+    shipped: filteredDeliveries.filter(d => d.deliveryStatus === 'shipped').length,
+    delivered: filteredDeliveries.filter(d => d.deliveryStatus === 'delivered').length,
   };
 
   const getStatusIcon = (status) => {
@@ -87,16 +90,16 @@ const Delivery = () => {
         </div>
 
         <div className="divide-y divide-gray-200">
-          {deliveries.map((delivery) => {
+          {filteredDeliveries.map((delivery) => {
             const StatusIcon = getStatusIcon(delivery.deliveryStatus);
             
             return (
-              <div key={delivery.id} className="p-6 hover:bg-gray-50">
+              <div key={delivery._id} className="p-6 hover:bg-gray-50">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center mb-2">
                       <StatusIcon className="w-5 h-5 text-gray-400 mr-3" />
-                      <h3 className="font-medium text-gray-900">{delivery.id}</h3>
+                      <h3 className="font-medium text-gray-900">{delivery.orderId}</h3>
                       <span className={`ml-3 px-2 py-1 text-xs font-medium rounded-full ${getDeliveryStatusColor(delivery.deliveryStatus)}`}>
                         {delivery.deliveryStatus}
                       </span>
@@ -105,31 +108,31 @@ const Delivery = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <p className="text-sm font-medium text-gray-700">Vendor</p>
-                        <p className="text-sm text-gray-600">{delivery.vendorName}</p>
+                        <p className="text-sm text-gray-600">{delivery.customer.customerName}</p>
                         <div className="flex items-center mt-1">
                           <Phone className="w-3 h-3 text-gray-400 mr-1" />
-                          <p className="text-xs text-gray-500">{delivery.vendorPhone}</p>
+                          <p className="text-xs text-gray-500">{delivery.customer.customerPhoneNumber}</p>
                         </div>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium text-gray-700">Order Details</p>
                         <p className="text-sm text-gray-600">
-                          {delivery.items.length} items • {formatCurrency(delivery.total)}
+                          {delivery.items.length} items • {formatCurrency(delivery.totalprice)}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          Ordered: {formatDateTime(delivery.orderDate)}
+                          Ordered: {formatDateTime(delivery.createdAt)}
                         </p>
                       </div>
 
                       <div>
                         <p className="text-sm font-medium text-gray-700">Delivery Info</p>
                         <p className="text-sm text-gray-600">
-                          Est: {formatDateTime(delivery.estimatedDelivery)}
+                          Est: {formatDateTime(delivery.delivery.deliveredOn)}
                         </p>
-                        {delivery.actualDelivery && (
+                        {delivery.delivery.deliveredOn && (
                           <p className="text-xs text-green-600 mt-1">
-                            Delivered: {formatDateTime(delivery.actualDelivery)}
+                            Delivered: {formatDateTime(delivery.delivery.deliveredOn)}
                           </p>
                         )}
                       </div>
@@ -138,7 +141,7 @@ const Delivery = () => {
                     <div className="mt-3">
                       <div className="flex items-start">
                         <MapPin className="w-4 h-4 text-gray-400 mr-2 mt-0.5" />
-                        <p className="text-sm text-gray-600">{delivery.deliveryAddress}</p>
+                        <p className="text-sm text-gray-600">{delivery.delivery.address}</p>
                       </div>
                     </div>
                   </div>
@@ -146,7 +149,7 @@ const Delivery = () => {
                   <div className="ml-6 flex flex-col space-y-2">
                     {delivery.deliveryStatus === 'pending' && (
                       <button
-                        onClick={() => handleStatusUpdate(delivery.id, 'packed')}
+                        onClick={() => handleStatusUpdate(delivery._id, 'packed')}
                         className="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200"
                       >
                         Mark as Packed
@@ -154,7 +157,7 @@ const Delivery = () => {
                     )}
                     {delivery.deliveryStatus === 'packed' && (
                       <button
-                        onClick={() => handleStatusUpdate(delivery.id, 'shipped')}
+                        onClick={() => handleStatusUpdate(delivery._id, 'shipped')}
                         className="px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 rounded-md hover:bg-purple-200"
                       >
                         Mark as Shipped
@@ -162,7 +165,7 @@ const Delivery = () => {
                     )}
                     {delivery.deliveryStatus === 'shipped' && (
                       <button
-                        onClick={() => handleStatusUpdate(delivery.id, 'delivered')}
+                        onClick={() => handleStatusUpdate(delivery._id, 'delivered')}
                         className="px-4 py-2 text-sm font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200"
                       >
                         Mark as Delivered
@@ -181,7 +184,7 @@ const Delivery = () => {
           })}
         </div>
 
-        {deliveries.length === 0 && (
+        {filteredDeliveries.length === 0 && (
           <div className="text-center py-12">
             <Truck className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No active deliveries</h3>
@@ -244,12 +247,12 @@ const Delivery = () => {
                   {selectedDelivery.items.map((item, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div>
-                        <p className="font-medium text-gray-900">{item.productName}</p>
+                        <p className="font-medium text-gray-900">{item.name}</p>
                         <p className="text-sm text-gray-600">
                           Quantity: {item.quantity} {item.unit}
                         </p>
                       </div>
-                      <p className="font-medium text-gray-900">{formatCurrency(item.total)}</p>
+                      <p className="font-medium text-gray-900">{formatCurrency(item.price)}</p>
                     </div>
                   ))}
                 </div>
@@ -262,19 +265,19 @@ const Delivery = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Vendor</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedDelivery.vendorName}</p>
+                      <p className="mt-1 text-sm text-gray-900">{selectedDelivery.customer.customerName}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Phone</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedDelivery.vendorPhone}</p>
+                      <p className="mt-1 text-sm text-gray-900">{selectedDelivery.customer.customerPhoneNumber}</p>
                     </div>
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700">Address</label>
-                      <p className="mt-1 text-sm text-gray-900">{selectedDelivery.deliveryAddress}</p>
+                      <p className="mt-1 text-sm text-gray-900">{selectedDelivery.delivery.address}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Estimated Delivery</label>
-                      <p className="mt-1 text-sm text-gray-900">{formatDateTime(selectedDelivery.estimatedDelivery)}</p>
+                      <p className="mt-1 text-sm text-gray-900">{formatDateTime(selectedDelivery.delivery.deliveredOn)}</p>
                     </div>
                     {selectedDelivery.actualDelivery && (
                       <div>

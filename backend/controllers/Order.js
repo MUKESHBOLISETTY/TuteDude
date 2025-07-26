@@ -8,7 +8,7 @@ const orderClients = new Set();
 
 export const createOrder = async (req, res) => {
     try {
-        const { delivery, orderlist, subtotal, totalprice,deliveryStatus } = req.body;
+        const { delivery, orderlist, subtotal, totalprice,deliveryStatus,status } = req.body;
       
         if (!delivery.address || !orderlist || !delivery.distance || !delivery.deliveryfee || !delivery.paymentmethod || !deliveryStatus) {
             return res.status(400).json({
@@ -37,7 +37,7 @@ export const createOrder = async (req, res) => {
             items: orderlist,
             subtotal,
             totalprice,
-            status: "pending",
+            status,
             deliveryStatus,
 
         })
