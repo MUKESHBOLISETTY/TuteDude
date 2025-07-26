@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { sendUserUpdater } from '../middleware/ServerSentUpdates';
 
 const sellerSchema = new mongoose.Schema(
   {
@@ -205,6 +206,12 @@ const sellerSchema = new mongoose.Schema(
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      }
+    ],
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Order",
       }
     ]
@@ -213,6 +220,12 @@ const sellerSchema = new mongoose.Schema(
     timestamps: true, // Automatically manages createdAt and updatedAt
   }
 );
+
+sellerSchema.post("save", async function (doc) {
+  if (doc.email) {
+    await sendUserUpdater(doc.email)
+  }
+});
 
 export const Seller = mongoose.model('Seller', sellerSchema);
 

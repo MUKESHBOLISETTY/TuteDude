@@ -251,7 +251,7 @@ export const resendOtp = async (req, res) => {
     }
 }
 
-const getUserData = async (email) => {
+export const getUserData = async (email) => {
     try {
         const user = await Buyer.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'orders', }) || await Seller.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'products' })
         if (user?.verified !== true || !user) {
@@ -264,46 +264,6 @@ const getUserData = async (email) => {
     }
 }
 
-export const getUser = async (req, res) => {
-    try {
-        const email = req.params.email;
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
-        res.setHeader('X-Accel-Buffering', 'no');
-
-        const initialData = await getUserData(email);
-        res.write(`event: initial_data\n`);
-        clients.set(email, res)
-        res.write(`data: ${JSON.stringify(initialData)}\n\n`);
-        console.log(`SSE client for ${email} connected. Sent initial data.`);
-    } catch (error) {
-        if (!res.headersSent) {
-            return res.status(500).json({ success: false, message: 'Failed to establish SSE connection.' });
-        } else {
-            res.write(`event: error\n`);
-            res.write(`data: ${JSON.stringify({ message: 'Failed to retrieve initial user data.', code: 'INITIAL_DATA_ERROR' })}\n\n`);
-            res.end();
-        }
-    }
-}
-
-export const sendUpdater = async (email) => {
-    try {
-        const res = clients.get(email);
-        // console.log(res)
-        if (res) {
-            const updatedUser = await getUserData(email);
-            res.write(`event: user_update\n`);
-            res.write(`data: ${JSON.stringify(updatedUser)}\n\n`);
-            console.log(`Sent updated data to ${email}`);
-        }
-    } catch (error) {
-        res.write(`event: error\n`);
-        res.write(`data: ${JSON.stringify({ message: 'Failed to retrieve user data.', code: 'SEND_UPDATE_ERROR' })}\n\n`);
-        res.end();
-    }
-}
 
 export const sendForgotPasswordOtp = async (req, res) => {
     try {

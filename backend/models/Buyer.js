@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { sendUpdater } from '../controllers/Auth.js';
+import { sendUserUpdater } from '../controllers/Auth.js';
 
 const buyerSchema = new mongoose.Schema(
     {
@@ -70,7 +70,7 @@ const buyerSchema = new mongoose.Schema(
 
 buyerSchema.post("save", async function (doc) {
     if (doc.email) {
-        await sendUpdater(doc.email)
+        await sendUserUpdater(doc.email)
     }
 });
 
