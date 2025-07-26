@@ -189,7 +189,7 @@ export const authApi = {
 
 export const OrderApi = {
   createOrder:(data)=> apiService.post('/orders/createOrder',data),
-  updateStatus:(orderId,newStatus) => apiService.put('/orders/updateStatus',{orderId,newStatus})
+  updateStatus:(orderId,newStatus) => apiService.put('/orders/updateStatus',{orderId,deliveryStatus:newStatus})
 
 }
 export const productsApi = {

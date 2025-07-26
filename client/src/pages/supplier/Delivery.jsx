@@ -3,17 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Truck, Clock, CheckCircle, MapPin, Phone } from 'lucide-react';
 import { updateDeliveryStatus } from '../../redux/supplier/deliverySlice';
 import { formatCurrency, formatDateTime, getDeliveryStatusColor } from '../../lib/utils';
+import useOrders from '../../hooks/useOrders';
 
 const Delivery = () => {
   const dispatch = useDispatch();
   const { deliveries } = useSelector(state => state.deliveries);
   const { orders } = useSelector(state => state.orders);
   const [selectedDelivery, setSelectedDelivery] = useState(null);
+  const {updateStatus} = useOrders();
 
   const filteredDeliveries = orders.filter((o)=> o.status === 'confirmed')
 
-  const handleStatusUpdate = (orderId, status) => {
-    dispatch(updateDeliveryStatus({ orderId, status }));
+  const handleStatusUpdate = async(orderId, deliveryStatus) => {
+    // dispatch(updateDeliveryStatus({ orderId, status }));
+    await updateStatus(orderId,deliveryStatus);
   };
 
   const deliveryStats = {
