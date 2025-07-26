@@ -1,26 +1,27 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
-  Truck, 
-  DollarSign, 
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Truck,
+  DollarSign,
   Star,
   LogOut,
   User
 } from 'lucide-react';
 import { supplierProfile } from '../../data/mockData';
+import toast from 'react-hot-toast';
+import { setUser } from '../../redux/supplier/authSlice';
 
 const Sidebar = () => {
   const location = useLocation();
-
+  const navigate = useNavigate();
   const navigation = [
     { name: 'Dashboard', href: '/supplier', icon: LayoutDashboard },
     { name: 'Products', href: '/supplier/products', icon: Package },
     { name: 'Orders', href: '/supplier/orders', icon: ShoppingCart },
     { name: 'Delivery', href: '/supplier/delivery', icon: Truck },
-    { name: 'Earnings', href: '/supplier/earnings', icon: DollarSign },
   ];
 
   const isActive = (href) => {
@@ -28,6 +29,14 @@ const Sidebar = () => {
       return location.pathname === '/supplier';
     }
     return location.pathname.startsWith(href);
+  };
+
+  const handleLogout = () => {
+    dispatch(setUser(null));
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    toast.success('Logged out successfully');
+    navigate('/');
   };
 
   return (
@@ -53,11 +62,10 @@ const Sidebar = () => {
             <NavLink
               key={item.name}
               to={item.href}
-              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                isActive(item.href)
-                  ? 'bg-green-100 text-green-700 border-r-2 border-green-700'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-              }`}
+              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive(item.href)
+                ? 'bg-green-100 text-green-700 border-r-2 border-green-700'
+                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                }`}
             >
               <Icon className="w-5 h-5 mr-3" />
               {item.name}
@@ -81,7 +89,7 @@ const Sidebar = () => {
             </p>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <Star className="w-4 h-4 text-yellow-400 fill-current" />
@@ -94,7 +102,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+        <button onClick={() => { handleLogout }} className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
           <LogOut className="w-4 h-4 mr-3" />
           Logout
         </button>

@@ -2,11 +2,12 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Clock, Eye } from 'lucide-react';
 import { formatCurrency, formatDateTime, getOrderStatusColor } from '../../lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 const RecentOrders = () => {
   const { orders } = useSelector(state => state.orders);
   const recentOrders = orders.slice(0, 5);
-
+const navigate = useNavigate();
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100">
       <div className="p-6 border-b border-gray-100">
@@ -52,7 +53,7 @@ const RecentOrders = () => {
         )}
 
         <div className="mt-6 text-center">
-          <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700">
+          <button onClick={() => {navigate('/supplier/orders')}} className="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700">
             <Eye className="w-4 h-4 mr-2" />
             View All Orders
           </button>

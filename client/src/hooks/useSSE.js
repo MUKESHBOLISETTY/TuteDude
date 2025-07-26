@@ -47,10 +47,12 @@ export const useSSE = () => {
         eventSource.addEventListener('user_update', (event) => {
             try {
                 const data = JSON.parse(event.data);
+
                 console.log('Received user update (SSE):', data);
                 dispatch(setUser(data));
-                dispatch(setProducts(data.products));
-                dispatch(setFilteredProducts(data.filteredProducts));
+                const productdata = data.products ? data.products : []
+                dispatch(setProducts(productdata));
+                dispatch(setFilteredProducts(productdata));
                 dispatch(setLoading(false))
             } catch (e) {
                 console.error('Error parsing user update SSE data:', e);
@@ -152,7 +154,7 @@ export const useSSE = () => {
                 // dispatch(setUser(null));
                 // localStorage.removeItem("token");
                 // localStorage.removeItem("email");
-                
+
             } else {
                 // dispatch(setError('Real-time updates encountered an error.'));
             }
