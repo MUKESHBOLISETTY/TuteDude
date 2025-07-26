@@ -42,9 +42,9 @@ const ExpiryAlerts = () => {
           <div className="space-y-3">
             {expiringProducts.map((product) => {
               const daysToExpiry = Math.ceil((new Date(product.expiryDate) - new Date()) / (1000 * 60 * 60 * 24));
-              
+              const productId = product._id.toString()
               return (
-                <div key={product.id} className="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div key={productId} className="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                   <div className="flex items-center">
                     <Package className="w-4 h-4 text-yellow-600 mr-3" />
                     <div>
