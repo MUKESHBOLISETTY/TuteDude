@@ -17,15 +17,13 @@ const orderSchema = new mongoose.Schema(
             address: { type: String, required: true },
             distance: { type: Number, required: true },
             deliveryfee: { type: Number, required: true },
-            deliveryagentId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
             deliveredOn: { type: Date, default: null },
             paymentmethod: { type: String, enum: ["payondelivery", "upi"], required: true },
         },
         items: [{
             name: { type: String, required: true },
             quantity: { type: Number, required: true },
-            price: { type: Number, required: true },
-            add_ons: { type: Array }
+            price: { type: Number, required: true }
         }],
         subtotal: { type: Number, required: true },
         totalprice: { type: Number, require: true },
