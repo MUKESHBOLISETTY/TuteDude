@@ -19,12 +19,13 @@ const orderSchema = new mongoose.Schema(
             paymentmethod: { type: String, enum: ["payondelivery", "upi"], required: true },
         },
         items: [{
+            productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
             name: { type: String, required: true },
             quantity: { type: Number, required: true },
             price: { type: Number, required: true }
         }],
         subtotal: { type: Number, required: true },
-        totalprice: { type: Number, require: true },
+        totalprice: { type: Number, required: true },
         status: {
             type: String,
             enum: ["pending", "processing", "out of delivery", "completed", "cancelled"],

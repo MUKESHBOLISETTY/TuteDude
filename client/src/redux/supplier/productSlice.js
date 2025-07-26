@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { mockProducts } from '../../data/mockData';
 
 const initialState = {
-  products: mockProducts,
-  filteredProducts: mockProducts,
+  products: [],
+  filteredProducts: [],
   loading: false,
   error: null,
   searchTerm: '',
@@ -21,6 +21,12 @@ const productSlice = createSlice({
     },
     setError: (state, action) => {
       state.error = action.payload;
+    },
+    setProducts: (state, action) => {
+      state.products = action.payload;
+    },
+    setFilteredProducts: (state, action) => {
+      state.filteredProducts = action.payload;
     },
     addProduct: (state, action) => {
       const newProduct = {
@@ -108,6 +114,8 @@ const productSlice = createSlice({
 export const {
   setLoading,
   setError,
+  setProducts,
+  setFilteredProducts,
   addProduct,
   updateProduct,
   deleteProduct,

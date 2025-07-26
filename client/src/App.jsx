@@ -15,23 +15,19 @@ import NotFound from "./pages/NotFound";
 import { useDispatch, useSelector } from 'react-redux';
 import useSSE from './hooks/useSSE';
 import toast, { Toaster } from 'react-hot-toast';
-const SellerRoute = ({ children }) => {
-  const { user } = useSelector((state) => state.auth);
+// const SellerRoute = ({ children }) => {
+//   const { user } = useSelector((state) => state.auth);
 
-  if (!user) {
-    return <Navigate to="/auth/login" />;
-  }
+//   if (user.type !== 'Seller') {
+//     return <Navigate to="/" />;
+//   }
 
-  if (user.type !== 'Seller') {
-    return <Navigate to="/" />;
-  }
-
-  return children;
-};
+//   return children;
+// };
 
 function App() {
   const { token, user } = useSelector((state) => state.auth);
-  const { setupUserSSE } = useSSE()
+  const { setupUserSSE, setupProductsSSE } = useSSE()
 
   useEffect(() => {
     if (token) {
@@ -39,6 +35,10 @@ function App() {
       return cleanup;
     }
   }, [token, setupUserSSE]);
+  useEffect(() => {
+      const cleanup = setupProductsSSE();
+      return cleanup;
+  }, [token, setupProductsSSE]);
 
   return (
     <Provider store={store}>
@@ -52,9 +52,9 @@ function App() {
 
           <Route path="/" element={<Navigate to="/supplier" replace />} />
           <Route path="/supplier" element={
-            <SellerRoute>
-              <SupplierLayout />
-            </SellerRoute>
+            // <SellerRoute>
+            <SupplierLayout />
+            // </SellerRoute>
           }>
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
