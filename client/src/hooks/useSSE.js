@@ -47,7 +47,6 @@ export const useSSE = () => {
         eventSource.addEventListener('user_update', (event) => {
             try {
                 const data = JSON.parse(event.data);
-                dispatch(setLoading(true))
                 console.log('Received user update (SSE):', data);
                 dispatch(setUser(data));
                 dispatch(setProducts(data.products));

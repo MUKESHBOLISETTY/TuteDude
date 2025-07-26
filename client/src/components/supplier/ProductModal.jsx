@@ -125,12 +125,12 @@ const ProductModal = ({ isOpen, onClose, onSave, product = null, categories = []
                 {...register('unit', { required: 'Unit is required' })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option value="">Select unit</option>
-                <option value="kg">Kilogram (kg)</option>
-                <option value="liter">Liter</option>
-                <option value="piece">Piece</option>
-                <option value="dozen">Dozen</option>
-                <option value="bag">Bag</option>
+                <option value="">Select Unit</option>
+                <option value="kg">kg</option>
+                <option value="g">gram</option>
+                <option value="l">liter</option>
+                <option value="ml">milliliter</option>
+                <option value="pieces">pieces</option>
               </select>
             </div>
 

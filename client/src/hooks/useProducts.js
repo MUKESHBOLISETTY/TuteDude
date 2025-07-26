@@ -43,6 +43,7 @@ export const useProducts = () => {
   const deleteProduct = async (productId) => {
     try {
       dispatch(setLoading(true));
+      console.log(productId)
       const response = await productsApi.deleteProduct(productId);
       toast.success('Product deleted successfully!');
       return response;
