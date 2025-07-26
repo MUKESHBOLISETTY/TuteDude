@@ -3,7 +3,7 @@ import { login, signup, verifyOtp, resendOtp, updateUser, changePassword, sendFo
 import { getUser } from '../middleware/ServerSentUpdates.js'
 import { rateLimit } from 'express-rate-limit'
 import { authenticateUser } from '../middleware/AuthMiddleware.js'
-import { addAddress, deleteAddress, updateAddress } from "../controllers/AddressManagement.js";
+// import { addAddress, deleteAddress, updateAddress } from "../controllers/AddressManagement.js";
 const router = express.Router();
 // Rate limiter
 const limiter = rateLimit({

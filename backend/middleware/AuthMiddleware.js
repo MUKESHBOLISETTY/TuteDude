@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Buyer } from "../model/Buyer.js";
+import { Buyer } from "../models/Buyer.js";
 import { Seller } from "../models/Seller.js";
 import dotenv from "dotenv";
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { store } from './redux/store';
@@ -14,7 +14,7 @@ import Earnings from './pages/supplier/Earnings';
 import NotFound from "./pages/NotFound";
 import { useDispatch, useSelector } from 'react-redux';
 import useSSE from './hooks/useSSE';
-
+import toast, { Toaster } from 'react-hot-toast';
 function App() {
   const { token, user } = useSelector((state) => state.auth);
   const { setupUserSSE } = useSSE()
@@ -28,6 +28,7 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
+        <Toaster />
         <Routes>
           {/* Auth Routes */}
           <Route path="/auth/signup" element={<>{user ? <NotFound /> : <SignUp />}</>} />

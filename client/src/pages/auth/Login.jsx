@@ -3,10 +3,8 @@ import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import ForgotPasswordModal from '../../components/popups/ForgotPasswordModal';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-// import { useToast } from '../../hooks/useToast';
 const Login = () => {
     const navigate = useNavigate();
-    // const { toast } = useToast();
     const { login } = useAuth()
     const [formData, setFormData] = useState({
         email: '',
@@ -29,11 +27,9 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.email || !formData.password) {
-            // toast({
-            //     title: "User Status",
-            //     description: `Please enter both email and password.`,
-            //     duration: 2000,
-            // });
+            toast('Please enter both email and password.', {
+                duration: 2000,
+            });
             return;
         }
         const response = await login(formData, navigate)

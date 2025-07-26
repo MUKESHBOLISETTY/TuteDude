@@ -120,6 +120,7 @@
 
 import axios from 'axios';
 import store from '../redux/store';
+import toast from 'react-hot-toast';
 const apiService = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1/',
   headers: {
@@ -147,7 +148,12 @@ apiService.interceptors.response.use(
   (error) => {
     //if (error.response?.status === 401) {
     if (error.response?.data.message) {
-
+      console.error('API Error:', error.response.data.message);
+      toast.error(error.response.data.message, {
+        duration: 3000,
+        position: 'bottom-right',
+        icon: '⚠️',
+      })
     }
     return Promise.reject(error);
   }

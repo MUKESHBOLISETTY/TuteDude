@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { sendUserUpdater } from '../middleware/ServerSentUpdates';
+import { sendUserUpdater } from '../middleware/ServerSentUpdates.js';
 
 const sellerSchema = new mongoose.Schema(
   {
@@ -51,7 +51,7 @@ const sellerSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      required
+      required : true
     },
 
     // II. Business Details

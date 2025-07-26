@@ -10,6 +10,7 @@ import {
     setEmail
 } from '../redux/supplier/authSlice';
 import { useCallback } from 'react';
+import toast from 'react-hot-toast';
 
 export const useSSE = () => {
     const dispatch = useDispatch();
@@ -62,12 +63,10 @@ export const useSSE = () => {
                 // dispatch(setUser(null));
                 // localStorage.removeItem("token");
                 // localStorage.removeItem("email");
-                // toast({
-                //   title: "Session Expired",
-                //   description: "Your session has ended. Please log in again.",
-                //   duration: 3000,
-                //   status: "error"
-                // });
+                toast('Real-time updates disconnected. Please log in again.', {
+                    duration: 3000,
+                    icon: '⚠️',
+                });
             } else {
                 dispatch(setError('Real-time updates encountered an error.'));
             }

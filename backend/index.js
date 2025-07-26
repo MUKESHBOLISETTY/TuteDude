@@ -2,9 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import { connect } from './config/database.js';
-// import { cloudinaryConnect } from './config/cloudinary.js';
+import { cloudinaryConnect } from './config/cloudinary.js';
 import fileUpload from 'express-fileupload';
-
+import userRoutes from './routes/User.js';
 const app = express();
 const port = 4000;
 
@@ -26,7 +26,9 @@ app.use(
   })
 );
 
-// cloudinaryConnect();
+cloudinaryConnect();
+
+app.use("/api/v1/auth",userRoutes);
 
 app.get('/', (req, res) => {
   return res.json({
