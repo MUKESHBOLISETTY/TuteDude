@@ -1,68 +1,169 @@
-import { Product } from '../models/productModel.js';
+import { Product } from '../models/Product.js';
+import { Seller } from '../models/Seller.js';
 
 // Create a new product
 export const createProduct = async (req, res) => {
   try {
-    const product = new Product(req.body);
+    // Destructure all required fields from request body
+    const {
+      name,
+      category,
+      price,
+      unit,
+      stock,
+      minOrderQty,
+      expiryDate,
+      qualityScore,
+      bulkDiscounts,
+      origin
+    } = req.body;
+
+    // Required field validation
+    const requiredFields = { name, category, price, unit, stock, minOrderQty, expiryDate, origin };
+    const missingFields = Object.entries(requiredFields)
+      .filter(([_, value]) => !value && value !== 0)
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required fields: ${missingFields.join(', ')}`
+      });
+    }
+
+    // Validate price and quantities
+    if (price <= 0 || stock < 0 || minOrderQty <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Price and quantities must be positive numbers'
+      });
+    }
+
+    // Validate unit
+    const validUnits = ['kg', 'g', 'l', 'ml', 'pieces'];
+    if (!validUnits.includes(unit)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid unit. Must be one of: ' + validUnits.join(', ')
+      });
+    }
+
+    // Validate bulk discounts if provided
+    if (bulkDiscounts && bulkDiscounts.length > 0) {
+      const isValidDiscounts = bulkDiscounts.every(discount =>
+        discount.minQty > 0 &&
+        discount.discount > 0 &&
+        discount.discount < 100
+      );
+
+      if (!isValidDiscounts) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid bulk discount configuration'
+        });
+      }
+    }
+
+    // Create the product object
+    const productData = {
+      name,
+      category,
+      price,
+      unit,
+      stock,
+      minOrderQty,
+      expiryDate: new Date(expiryDate),
+      qualityScore: qualityScore || 0,
+      origin,
+      bulkDiscounts: bulkDiscounts || [],
+      seller: req.user._id, // Assuming req.user is set by auth middleware
+      isExpired: new Date() > new Date(expiryDate)
+    };
+
+    // Create and save the product
+    const product = new Product(productData);
     await product.save();
-    res.status(201).json(product);
+
+    // Update seller's products array
+    await Seller.findByIdAndUpdate(
+      req.user._id,
+      { $push: { products: product._id } }
+    );
+
+    // Return success response
+    return res.status(201).json({
+      success: true,
+      message: 'Product created successfully',
+      product: {
+        id: product._id,
+        ...productData,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt
+      }
+    });
+
   } catch (error) {
     console.error('Create Product Error:', error);
-    res.status(400).json({ error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Error creating product'
+    });
   }
 };
 
 // Get all products (with optional filters)
-export const getProducts = async (req, res) => {
-  try {
-    const { search, category, stock, expiry } = req.query;
+// export const getProducts = async (req, res) => {
+//   try {
+//     const { search, category, stock, expiry } = req.query;
 
-    let query = {};
+//     let query = {};
 
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { category: { $regex: search, $options: 'i' } }
-      ];
-    }
+//     if (search) {
+//       query.$or = [
+//         { name: { $regex: search, $options: 'i' } },
+//         { category: { $regex: search, $options: 'i' } }
+//       ];
+//     }
 
-    if (category && category !== 'all') {
-      query.category = category;
-    }
+//     if (category && category !== 'all') {
+//       query.category = category;
+//     }
 
-    if (stock === 'low') {
-      query.stock = { $gt: 0, $lt: 20 };
-    } else if (stock === 'out') {
-      query.stock = 0;
-    }
+//     if (stock === 'low') {
+//       query.stock = { $gt: 0, $lt: 20 };
+//     } else if (stock === 'out') {
+//       query.stock = 0;
+//     }
 
-    if (expiry && expiry !== 'all') {
-      const days = parseInt(expiry);
-      const today = new Date();
-      const targetDate = new Date();
-      targetDate.setDate(today.getDate() + days);
-      query.expiryDate = { $lte: targetDate };
-    }
+//     if (expiry && expiry !== 'all') {
+//       const days = parseInt(expiry);
+//       const today = new Date();
+//       const targetDate = new Date();
+//       targetDate.setDate(today.getDate() + days);
+//       query.expiryDate = { $lte: targetDate };
+//     }
 
-    const products = await Product.find(query).sort({ createdAt: -1 });
-    res.json(products);
-  } catch (error) {
-    console.error('Get Products Error:', error);
-    res.status(500).json({ error: 'Failed to fetch products' });
-  }
-};
+//     const products = await Product.find(query).sort({ createdAt: -1 });
+//     res.json(products);
+//   } catch (error) {
+//     console.error('Get Products Error:', error);
+//     res.status(500).json({ error: 'Failed to fetch products' });
+//   }
+// };
 
 // Get a single product by ID
-export const getProductById = async (req, res) => {
+export const getProductsData = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ error: 'Product not found' });
-    res.json(product);
+    const product = await Product.find({ isExpired: false });
+    if (!product) { throw new Error("User not found"); }
+    return product
   } catch (error) {
-    console.error('Get Product Error:', error);
-    res.status(500).json({ error: 'Failed to fetch product' });
+    console.log(error)
+    throw new Error(`Failed to retrieve user data`);
   }
 };
+
+
 
 // Update a product
 export const updateProduct = async (req, res) => {

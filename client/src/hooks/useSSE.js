@@ -9,6 +9,7 @@ import {
     setError,
     setEmail
 } from '../redux/supplier/authSlice';
+import { setProducts, setFilteredProducts } from '../redux/supplier/productSlice';
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 
@@ -33,6 +34,8 @@ export const useSSE = () => {
                 const data = JSON.parse(event.data);
                 console.log('Received initial user data (SSE):', data);
                 dispatch(setUser(data));
+                dispatch(setProducts(data.products || []));
+                dispatch(setFilteredProducts(data.products || []));
                 dispatch(setLoading(false));
             } catch (e) {
                 console.error('Error parsing initial SSE data:', e);
@@ -46,6 +49,8 @@ export const useSSE = () => {
                 const data = JSON.parse(event.data);
                 console.log('Received user update (SSE):', data);
                 dispatch(setUser(data));
+                dispatch(setProducts(data.products || []));
+                dispatch(setFilteredProducts(data.filteredProducts || []));
                 dispatch(setLoading(false))
             } catch (e) {
                 console.error('Error parsing user update SSE data:', e);
@@ -75,6 +80,92 @@ export const useSSE = () => {
         eventSource.onerror = (event) => {
             console.error('Generic EventSource error:', event);
         };
+    }, [token, dispatch]);
+
+    const setupProductsSSE = useCallback(() => {
+        if (!token) {
+            // dispatch(setError("Authentication required for real-time updates."));
+            return;
+        }
+        const sseUrl = `http://localhost:4000/api/v1/product/getProducts`;
+        const eventSource = new EventSource(sseUrl);
+        //dispatch(setLoading(true));
+
+        eventSource.onopen = () => {
+            console.log('SSE Products connection opened.');
+        };
+
+        eventSource.addEventListener('initial_product_data', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log('Received initial product data (SSE):', data);
+                //dispatch(setOrders(data));
+                // dispatch(setLoading(false));
+            } catch (e) {
+                console.error('Error parsing initial SSE data:', e);
+                dispatch(setOrderError('Failed to parse initial order data.'));
+                // dispatch(setLoading(false));
+            }
+        });
+
+        eventSource.addEventListener('products_update', (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log('Received products update (SSE):', data);
+                //dispatch(setOrders(data));
+                // dispatch(setLoading(false))
+            } catch (e) {
+                console.error('Error parsing user update SSE data:', e);
+                // dispatch(setError('Failed to parse real-time user update.'));
+            }
+        });
+
+        eventSource.addEventListener('restricted', (event) => {
+            console.log('SSE Error:', event);
+            eventSource.close();
+            // return () => {
+            //     console.log('Closing SSE connection.');
+            //     eventSource.close();
+            // };
+            // dispatch(setLoading(false));
+            if (event.target && event.target.readyState === EventSource.CLOSED) {
+                console.log('SSE connection closed by server.');
+                //dispatch(setError('Real-time updates disconnected. Please re-authenticate.'));
+                // dispatch(setToken(null));
+                // dispatch(setUser(null));
+                // localStorage.removeItem("token");
+                // localStorage.removeItem("email");
+
+
+            } else {
+                // dispatch(setError('Real-time updates encountered an error.'));
+            }
+        });
+
+        eventSource.addEventListener('error', (event) => {
+            console.error('SSE Error:', event);
+            // dispatch(setLoading(false));
+            if (event.target && event.target.readyState === EventSource.CLOSED) {
+                console.log('SSE connection closed by server.');
+                dispatch(setError('Real-time updates disconnected. Please re-authenticate.'));
+                // dispatch(setToken(null));
+                // dispatch(setUser(null));
+                // localStorage.removeItem("token");
+                // localStorage.removeItem("email");
+                
+            } else {
+                // dispatch(setError('Real-time updates encountered an error.'));
+            }
+        });
+
+        eventSource.onerror = (event) => {
+            console.error('Generic EventSource error:', event);
+        };
+
+        return () => {
+            console.log('Closing Products SSE connection.');
+            eventSource.close();
+        };
     }, [token, dispatch])
 
     return {
@@ -82,8 +173,11 @@ export const useSSE = () => {
         token,
         user,
         error,
-        setupUserSSE
+        setupUserSSE,
+        setupProductsSSE
     };
 }
+
+
 
 export default useSSE;

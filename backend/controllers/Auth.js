@@ -9,6 +9,7 @@ import uniqid from 'uniqid';
 import jwt from "jsonwebtoken";
 import errorHandler from '../utils/errorHandler.js';
 import { respond } from '../utils/respond.js';
+import { Product } from '../models/Product.js';
 
 const clients = new Map();
 
@@ -127,7 +128,7 @@ export const signup = async (req, res) => {
         const phone = parseInt(phonenumber);
         if (type == 'Seller') {
             await Seller.create({
-                token: freshtoken, username, email, phonenumber: phone, password: hashedPassword, type: 'Seller', image: imageUrl ? imageUrl : `http://api.dicebear.com/5.x/initials/svg?seed=${username}`, verified: false
+                token: freshtoken, sellerName: username, email, phoneNumber: phone, password: hashedPassword, type: 'Seller', profilePictureUrl: imageUrl ? imageUrl : `http://api.dicebear.com/5.x/initials/svg?seed=${username}`, verified: false
             })
         } else if (type == 'Buyer') {
             await Buyer.create({
@@ -254,13 +255,15 @@ export const resendOtp = async (req, res) => {
 
 export const getUserData = async (email) => {
     try {
-        const user = await Buyer.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'orders', }) || await Seller.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'products' })
+        const user = await Buyer.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'orders' }) || await Seller.findOne({ email, verified: true }).select("-password -token -forgottoken").populate({ path: 'products' })
+        console.log("User Data : ", user)
         if (user?.verified !== true || !user) {
             throw new Error("User not found");
         } else {
             return user
         }
     } catch (error) {
+        console.log(error)
         throw new Error(`Failed to retrieve user data`);
     }
 }

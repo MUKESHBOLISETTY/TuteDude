@@ -22,7 +22,6 @@ export const authenticateUser = async (req, res, next) => {
         }
 
         const user = await Buyer.findOne({ email: decoded.email }).select("-password") || await Seller.findOne({ email: decoded.email }).select("-password");
-
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found." });
         }
