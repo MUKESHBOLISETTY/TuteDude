@@ -1,4 +1,4 @@
-import { getUserData } from "../controllers/Auth";
+import { getUserData } from "../controllers/Auth.js";
 
 export const Clients = new Set();
 export const user = new Map();

@@ -1,8 +1,8 @@
-import { Buyer } from '../model/Buyer.js';
-import { Seller } from '../model/Seller.js';
-import { Order } from '../model/Order.js';
-import { OTP } from '../model/OTP.js'
-import { ForgotPassword } from '../model/ForgotPassword.js';
+import { Buyer } from '../models/Buyer.js';
+import { Seller } from '../models/Seller.js';
+import { Order } from '../models/Order.js';
+import { OTP } from '../models/OTP.js'
+import { ForgotPassword } from '../models/ForgotPassword.js';
 import bcrypt from "bcrypt";
 import otpGenerator from 'otp-generator';
 import uniqid from 'uniqid';
@@ -114,6 +114,7 @@ export const signup = async (req, res) => {
             })
         }
         const existingUsers = await Buyer.findOne({ email }) || await Seller.findOne({ email });
+
         if (existingUsers) {
             return res.status(400).json({
                 success: false,
@@ -124,11 +125,11 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const freshtoken = await tokenGenerator(email)
         const phone = parseInt(phonenumber);
-        if (type == 'seller') {
+        if (type == 'Seller') {
             await Seller.create({
                 token: freshtoken, username, email, phonenumber: phone, password: hashedPassword, type: 'Seller', image: imageUrl ? imageUrl : `http://api.dicebear.com/5.x/initials/svg?seed=${username}`, verified: false
             })
-        } else if (type == 'buyer') {
+        } else if (type == 'Buyer') {
             await Buyer.create({
                 token: freshtoken, username, email, phonenumber: phone, password: hashedPassword, type: 'Buyer', image: imageUrl ? imageUrl : `http://api.dicebear.com/5.x/initials/svg?seed=${username}`, verified: false
             })

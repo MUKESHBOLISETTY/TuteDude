@@ -1,5 +1,5 @@
-import { User } from '../model/User.js';
-import { Order } from '../model/Order.js';
+import { User } from '../models/User.js';
+import { Order } from '../models/Order.js';
 import uniqid from 'uniqid';
 import errorHandler from '../utils/errorHandler.js';
 

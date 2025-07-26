@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Facebook, Chrome } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-// import { useToast } from '../../hooks/useToast';
-
+import toast from 'react-hot-toast';
 const SignUp = () => {
     const navigate = useNavigate();
-    // const { toast } = useToast();
     const { signUp } = useAuth()
 
     const [formData, setFormData] = useState({
@@ -14,7 +12,8 @@ const SignUp = () => {
         email: '',
         phonenumber: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        type: ''
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -29,50 +28,39 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-            // toast({
-            //     title: "User Status",
-            //     description: `Passwords do not match`,
-            //     duration: 4000,
-            // });
+            toast('Passwords do not match.', {
+                duration: 3000
+            });
             return;
         }
         if (!formData.username.trim()) {
-            // toast({
-            //     title: "User Status",
-            //     description: `Full Name is required`,
-            //     duration: 4000,
-            // });
+            toast('Full Name is required.', {
+                duration: 4000
+            });
             return;
         }
         if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
-            // toast({
-            //     title: "User Status",
-            //     description: `Valid email is required`,
-            //     duration: 4000,
-            // });
+              toast('Valid email is required.', {
+                duration: 4000
+            });
             return;
         }
         if (!formData.phonenumber.trim() || !/^\d{10}$/.test(formData.phonenumber)) {
-            // toast({
-            //     title: "User Status",
-            //     description: `Valid 10-digit phone number is required`,
-            //     duration: 4000,
-            // });
+            toast('Valid 10-digit phone number is required.', {
+                duration: 4000
+            });
             return;
         }
         if (formData.password.length < 8) {
-            // toast({
-            //     title: "User Status",
-            //     description: `Password must be at least 8 characters long`,
-            //     duration: 4000,
-            // });
+            toast('Password must be at least 8 characters long.', {
+                duration: 4000
+            });
             return;
         }
         const signupData = {
             ...formData,
         }
         await signUp(signupData, navigate)
-
     };
 
     return (
@@ -172,6 +160,36 @@ const SignUp = () => {
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-gray-700 text-sm font-medium mb-2">Type</label>
+                            <div className="flex gap-6">
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="type"
+                                        value="Buyer"
+                                        checked={formData.type === 'Buyer'}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                                    />
+                                    <span className="ml-2 text-gray-700">Buyer</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="type"
+                                        value="Seller"
+                                        checked={formData.type === 'Seller'}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300"
+                                    />
+                                    <span className="ml-2 text-gray-700">Seller</span>
+                                </label>
                             </div>
                         </div>
 

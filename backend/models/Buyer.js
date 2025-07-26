@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { sendUserUpdater } from '../controllers/Auth.js';
+import { sendUserUpdater } from '../middleware/ServerSentUpdates.js';
 
 const buyerSchema = new mongoose.Schema(
     {
@@ -48,7 +48,7 @@ const buyerSchema = new mongoose.Schema(
         },
         type: {
             type: String,
-            required
+            required: true
         },
         verified: {
             type: Boolean,
