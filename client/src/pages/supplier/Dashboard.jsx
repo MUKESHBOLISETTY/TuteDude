@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Package, ShoppingCart, Truck, DollarSign, AlertTriangle } from 'lucide-react';
 import StatsCard from '../../components/supplier/StatsCard';
@@ -59,7 +59,7 @@ const Dashboard = () => {
                 Low Stock Alert
               </h4>
               <p className="text-sm text-yellow-700 mt-1">
-                {stats.lowStockProducts} product{stats.lowStockProducts !== 1 ? 's' : ''} running low on stock. 
+                {stats.lowStockProducts} product{stats.lowStockProducts !== 1 ? 's' : ''} running low on stock.
                 <button className="ml-2 text-yellow-800 underline hover:no-underline">
                   View Products
                 </button>

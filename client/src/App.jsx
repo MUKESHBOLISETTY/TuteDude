@@ -29,7 +29,13 @@ import toast, { Toaster } from 'react-hot-toast';
 function App() {
   const { token, user } = useSelector((state) => state.auth);
   const { setupUserSSE, setupProductsSSE } = useSSE()
-
+  useEffect(() => {
+    const audio = new Audio('/welcoming_supplier.mp3');
+    audio.play();
+    audio.onended = () => {
+    toast.success('Welcome to the Portal!');
+    }
+  }, []);
   useEffect(() => {
     if (token) {
       const cleanup = setupUserSSE();
@@ -37,8 +43,8 @@ function App() {
     }
   }, [token, setupUserSSE]);
   useEffect(() => {
-      const cleanup = setupProductsSSE();
-      return cleanup;
+    const cleanup = setupProductsSSE();
+    return cleanup;
   }, [token, setupProductsSSE]);
 
   const { setupOrdersSSE } = useOrders();
