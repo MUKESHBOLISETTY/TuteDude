@@ -28,13 +28,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const { token, user } = useSelector((state) => state.auth);
-<<<<<<< Updated upstream
   const { setupUserSSE, setupProductsSSE } = useSSE()
 
-=======
-  const { setupUserSSE } = useSSE()
-  const {setupOrderSSE} = useOrders()
->>>>>>> Stashed changes
   useEffect(() => {
     if (token) {
       const cleanup = setupUserSSE();
