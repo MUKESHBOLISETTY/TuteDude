@@ -322,7 +322,7 @@ const Orders = () => {
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium text-gray-900">{formatCurrency(item.totalprice)}</p>
+                        <p className="font-medium text-gray-900">{formatCurrency(item.quantity * item.price)}</p>
                       </div>
                     </div>
                   ))}
