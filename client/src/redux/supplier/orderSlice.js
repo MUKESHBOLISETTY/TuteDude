@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { mockOrders } from '../../data/mockData';
 
 const initialState = {
-  orders: mockOrders,
+  orders: [],
   filteredOrders: mockOrders,
   loading: false,
   error: null,
@@ -17,12 +17,15 @@ const orderSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setOrders:(state, action) => {
+      state.orders = action.payload;
+    },
     setError: (state, action) => {
       state.error = action.payload;
     },
     updateOrderStatus: (state, action) => {
       const { orderId, status } = action.payload;
-      const order = state.orders.find(o => o.id === orderId);
+      const order = state.orders.find(o => o.orderId === orderId);
       if (order) {
         order.status = status;
         orderSlice.caseReducers.applyFilters(state);
@@ -30,7 +33,7 @@ const orderSlice = createSlice({
     },
     updateDeliveryStatus: (state, action) => {
       const { orderId, deliveryStatus } = action.payload;
-      const order = state.orders.find(o => o.id === orderId);
+      const order = state.orders.find(o => o.orderId === orderId);
       if (order) {
         order.deliveryStatus = deliveryStatus;
         if (deliveryStatus === 'delivered') {
@@ -74,6 +77,7 @@ const orderSlice = createSlice({
 
 export const {
   setLoading,
+  setOrders,
   setError,
   updateOrderStatus,
   updateDeliveryStatus,

@@ -5,7 +5,12 @@ import { connect } from './config/database.js';
 import { cloudinaryConnect } from './config/cloudinary.js';
 import fileUpload from 'express-fileupload';
 import userRoutes from './routes/User.js';
+<<<<<<< Updated upstream
 import productRoutes from './routes/Product.js';
+=======
+import orderRoutes from './routes/Order.js';
+
+>>>>>>> Stashed changes
 const app = express();
 const port = 4000;
 
@@ -27,10 +32,16 @@ app.use(
   })
 );
 
+
 cloudinaryConnect();
 
 app.use("/api/v1/auth",userRoutes);
+<<<<<<< Updated upstream
 app.use("/api/v1/product", productRoutes);
+=======
+app.use("/api/v1/orders",orderRoutes);
+
+>>>>>>> Stashed changes
 
 app.get('/', (req, res) => {
   return res.json({

@@ -14,6 +14,7 @@ import Earnings from './pages/supplier/Earnings';
 import NotFound from "./pages/NotFound";
 import { useDispatch, useSelector } from 'react-redux';
 import useSSE from './hooks/useSSE';
+import useOrders from './hooks/useOrders';
 import toast, { Toaster } from 'react-hot-toast';
 // const SellerRoute = ({ children }) => {
 //   const { user } = useSelector((state) => state.auth);
@@ -27,8 +28,13 @@ import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const { token, user } = useSelector((state) => state.auth);
+<<<<<<< Updated upstream
   const { setupUserSSE, setupProductsSSE } = useSSE()
 
+=======
+  const { setupUserSSE } = useSSE()
+  const {setupOrderSSE} = useOrders()
+>>>>>>> Stashed changes
   useEffect(() => {
     if (token) {
       const cleanup = setupUserSSE();
@@ -39,6 +45,14 @@ function App() {
       const cleanup = setupProductsSSE();
       return cleanup;
   }, [token, setupProductsSSE]);
+
+  const { setupOrdersSSE } = useOrders();
+  useEffect(() => {
+    if (token) {
+      const cleanup = setupOrdersSSE();
+      return cleanup;
+    }
+  }, [token, setupOrdersSSE]);
 
   return (
     <Provider store={store}>
