@@ -86,9 +86,9 @@ export const deleteOrder = async (req, res) => {
 export const updateStatus = async (req, res) => {
     try {
        
-            const { orderId, newStatus,deliveryStatus } = req.body;
+            const { orderId, status,deliveryStatus } = req.body;
             console.log("Req.body;",req.body)
-            if (!orderId || (!newStatus && !deliveryStatus)) {
+            if (!orderId || (!status && !deliveryStatus)) {
                 return res.status(400).json({
                     success: false,
                     message: "All fields are required",
@@ -100,7 +100,7 @@ export const updateStatus = async (req, res) => {
                 return res.status(404).json({ success: false, message: "Order not found." });
             }
             
-           if (newStatus) order.status = newStatus;
+           if (status) order.status = status;
            if (deliveryStatus) order.deliveryStatus = deliveryStatus;
 
             await order.save();
