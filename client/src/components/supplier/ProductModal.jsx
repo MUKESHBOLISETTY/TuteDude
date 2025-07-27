@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { X, Plus, Trash2 } from 'lucide-react';
+import { X, Plus, Trash2 ,CirclePlus} from 'lucide-react';
 import { validateProduct } from '../../lib/utils';
+// import  {CirclePlus}  from 'lucide-react';
 
 const ProductModal = ({ isOpen, onClose, onSave, product = null, categories = [] }) => {
   const [bulkDiscounts, setBulkDiscounts] = useState([]);
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm();
+  const [previewSource,setPreviewSource] = useState('')
 
   const isEditing = !!product;
+
+   const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file)
+      reader.onloadend = () => {
+        setPreviewSource(reader.result)
+        setValue('image',reader.result );
+        console.log("image un;",reader.result)
+
+      }
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -17,10 +34,12 @@ const ProductModal = ({ isOpen, onClose, onSave, product = null, categories = []
           setValue(key, product[key]);
         });
         setBulkDiscounts(product.bulkDiscounts || []);
+        setPreviewSource(product.image || '');
       } else {
         // Reset form for new product
         reset();
         setBulkDiscounts([]);
+        setPreviewSource('');
       }
     }
   }, [isOpen, product, setValue, reset]);
@@ -245,6 +264,39 @@ const ProductModal = ({ isOpen, onClose, onSave, product = null, categories = []
               ))}
             </div>
           </div>
+
+
+          <div className="sm:col-span-6">
+              <label className="block text-sm font-medium text-gray-700" htmlFor="image">
+                Image URL
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="image"
+                  id="image"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  required
+                />
+                <div 
+                onClick={() => document.getElementById('image').click()}
+                className='flex p-3 items-center justify-between mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500'>
+                  <p className="text-[16px]">Choose Images</p>
+                  <CirclePlus />
+                </div>
+              </label>
+              {
+                previewSource ? (
+                  <div className="mt-2">
+                    <img src={previewSource} alt="Preview" className="h-20 w-20 object-cover rounded-md" />
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 mt-3">No images choosen yet.</p>
+                )
+              }
+
+            </div>
 
           {/* Form Actions */}
           <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">

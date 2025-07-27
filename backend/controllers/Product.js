@@ -1,6 +1,7 @@
 import { sendUserUpdater } from '../middleware/ServerSentUpdates.js';
 import { Product } from '../models/Product.js';
 import { Seller } from '../models/Seller.js';
+import {uploadImageCloudinary} from '../utils/imageUploader.js'
 
 // Create a new product
 export const createProduct = async (req, res) => {
@@ -16,8 +17,12 @@ export const createProduct = async (req, res) => {
       expiryDate,
       qualityScore,
       bulkDiscounts,
-      origin
+      origin,
+      image
     } = req.body;
+    console.log("Image type:", typeof image);
+console.log("Image snippet:", typeof image === 'string' ? image.substring(0, 100) : image);
+    console.log("Image",image)
 
     // Required field validation
     const requiredFields = { name, category, price, unit, stock, minOrderQty, expiryDate, origin };
@@ -65,6 +70,7 @@ export const createProduct = async (req, res) => {
       }
     }
 
+    const imageN = await uploadImageCloudinary(image, process.env.FOLDER_NAME);
     // Create the product object
     const productData = {
       name,
@@ -78,7 +84,8 @@ export const createProduct = async (req, res) => {
       origin,
       bulkDiscounts: bulkDiscounts || [],
       seller: req.user._id, // Assuming req.user is set by auth middleware
-      isExpired: new Date() > new Date(expiryDate)
+      isExpired: new Date() > new Date(expiryDate),
+      image:imageN.secure_url
     };
 
     // Create and save the product
