@@ -3,22 +3,30 @@ import { Buyer } from '../models/Buyer.js';
 import { Order } from '../models/Order.js';
 import uniqid from 'uniqid';
 import errorHandler from '../utils/errorHandler.js';
+import { Seller } from '../models/Seller.js';
 
 const orderClients = new Set();
 
 export const createOrder = async (req, res) => {
     try {
         console.log(req.body)
-        const { delivery, orderlist, subtotal, totalprice, deliveryStatus, status } = req.body;
+        const { delivery, sellerId, orderlist, subtotal, totalprice, deliveryStatus, status } = req.body;
 
-        if (!delivery.address || !orderlist || !delivery.distance || !delivery.deliveryfee || !delivery.paymentmethod || !deliveryStatus) {
+        if (!delivery.address || !sellerId || !orderlist || !delivery.distance || !delivery.deliveryfee || !delivery.paymentmethod || !deliveryStatus) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required",
             })
         }
-        const user = await Buyer.findOne({ email: req.user.email })
-
+        const user = await Buyer.findOne({ email: req.user.email });
+        console.log("User:", sellerId);
+        const findSeller = await Seller.findById(sellerId);
+        if (!findSeller) {
+            return res.status(404).json({
+                success: false,
+                message: "Seller not found",
+            });
+        } console.log("Find Seller:", findSeller);
         const order = await Order.create({
             orderId: uniqid(),
             customer: {
@@ -31,7 +39,7 @@ export const createOrder = async (req, res) => {
                 address: delivery.address,
                 distance: delivery.distance,
                 deliveryfee: delivery.deliveryfee,
-                sellerId: delivery.sellerId,
+                sellerId: findSeller._id,
                 deliveredOn: delivery.deliveredOn,
                 paymentmethod: delivery.paymentmethod
             },
