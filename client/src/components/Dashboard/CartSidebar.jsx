@@ -7,7 +7,7 @@ import { removeFromCart, updateQuantity, clearCart } from '../../redux/supplier/
 const CartSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const { items, total, itemCount } = useSelector((state) => state.cart);
-
+  console.log("ITEMS IN CART:",items);
   const handleQuantityChange = (id, newQuantity) => {
     if (newQuantity > 0) {
       dispatch(updateQuantity({ id, quantity: newQuantity }));
@@ -21,6 +21,10 @@ const CartSidebar = ({ isOpen, onClose }) => {
   const handleClearCart = () => {
     dispatch(clearCart());
   };
+
+  const handleCheckout = () =>{
+
+  }
 
   const sidebarVariants = {
     open: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
@@ -68,9 +72,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
             </div>
           ) : (
             <div className="space-y-4">
-              {items.map((item) => (
+              {items.map((item,index) => (
                 <motion.div
-                  key={item.id}
+                  key={index}
                   layout
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
