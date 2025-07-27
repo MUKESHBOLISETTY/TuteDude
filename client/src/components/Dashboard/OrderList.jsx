@@ -81,11 +81,6 @@ const OrderList = () => {
               <button className="px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors">
                 View Details
               </button>
-              {order.deliveryStatus === 'shipped' && ( // Check deliveryStatus for Track Order button
-                <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                  Track Order
-                </button>
-              )}
             </div>
           </motion.div>
         ))}

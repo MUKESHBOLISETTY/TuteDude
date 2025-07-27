@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  MagnifyingGlassIcon, 
-  ShoppingCartIcon, 
+import {
+  MagnifyingGlassIcon,
+  ShoppingCartIcon,
   BellIcon,
   Bars3Icon,
   ChevronDownIcon,
   UserIcon,
   ClipboardDocumentListIcon,
-  TruckIcon
+  TruckIcon,
+  HomeIcon
 } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleProfileDropdown, logout } from '../../../redux/supplier/authSlice';
 import { setSearchQuery } from '../../../redux/supplier/userProductSlice';
 
-const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => { 
+const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => {
   const dispatch = useDispatch();
   const { itemCount } = useSelector((state) => state.cart);
   const { user, showProfileDropdown } = useSelector((state) => state.auth);
   const { searchQuery } = useSelector((state) => state.userproducts.filters);
   const [localSearch, setLocalSearch] = useState(searchQuery);
 
-  const handleSearch = (e) => { 
+  const handleSearch = (e) => {
     e.preventDefault();
     dispatch(setSearchQuery(localSearch));
   };
@@ -35,9 +36,9 @@ const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => {
   };
 
   const profileMenuItems = [
+    { id: 'home', name: 'Home', icon: HomeIcon },
     { id: 'profile', name: 'My Profile', icon: UserIcon },
     { id: 'orders', name: 'My Orders', icon: ClipboardDocumentListIcon },
-    { id: 'tracking', name: 'Delivery Tracking', icon: TruckIcon },
   ];
 
   return (
@@ -73,11 +74,6 @@ const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            {/* Notifications */}
-            <button className="p-2 text-gray-400 hover:text-gray-500 relative">
-              <BellIcon className="w-6 h-6" />
-              <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400"></span>
-            </button>
 
             {/* Cart */}
             <button
