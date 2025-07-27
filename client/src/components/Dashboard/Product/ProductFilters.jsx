@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-// RootState import is removed as it's TypeScript specific
 import { setFilter } from '../../../redux/supplier/userProductSlice';
 import { FunnelIcon } from '@heroicons/react/24/outline';
 
