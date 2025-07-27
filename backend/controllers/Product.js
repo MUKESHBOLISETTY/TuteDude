@@ -156,7 +156,7 @@ export const createProduct = async (req, res) => {
 // Get a single product by ID
 export const getProductsData = async (req, res) => {
   try {
-    const product = await Product.find({ isExpired: false });
+    const product = await Product.find({ isExpired: false }).populate('seller', 'sellerName email phoneNumber ratings');
     if (!product) { throw new Error("User not found"); }
     return product
   } catch (error) {
