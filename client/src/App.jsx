@@ -70,9 +70,9 @@ function AppContent() {
         <Route path="/auth/login" element={<>{user ? <NotFound /> : <Login />}</>} />
         <Route path="/auth/verifyotp/:email" element={<VerifyOTP />} />
 
-        {/* <Route path="/supplier" element={<>{user?.type == "Seller" ?
-          <SupplierLayout /> : <Login />}</>}> */}
-          <Route path="/supplier" element={<SupplierLayout />}>
+        <Route path="/supplier" element={<>{user?.type == "Seller" ?
+          <SupplierLayout /> : <Login />}</>}> 
+{/*           <Route path="/supplier" element={<SupplierLayout />}> */}
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="orders" element={<Orders />} />
