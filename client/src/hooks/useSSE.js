@@ -26,7 +26,7 @@ export const useSSE = () => {
             dispatch(setError("Authentication required for real-time updates."));
             return;
         }
-        const sseUrl = `http://localhost:4000/api/v1/auth/getUser/${token}/${email}`;
+        const sseUrl = `https://tute-dude-three.vercel.app/api/v1auth/getUser/${token}/${email}`;
         const eventSource = new EventSource(sseUrl);
         dispatch(setLoading(true));
 
@@ -103,7 +103,7 @@ export const useSSE = () => {
             // dispatch(setError("Authentication required for real-time updates."));
             return;
         }
-        const sseUrl = `http://localhost:4000/api/v1/product/getProducts`;
+        const sseUrl = `https://tute-dude-three.vercel.app/api/v1/product/getProducts`;
         const eventSource = new EventSource(sseUrl);
         //dispatch(setLoading(true));
 
