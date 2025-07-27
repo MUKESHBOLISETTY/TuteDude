@@ -13,10 +13,13 @@ import {
 import { supplierProfile } from '../../data/mockData';
 import toast from 'react-hot-toast';
 import { setUser } from '../../redux/supplier/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const navigation = [
     { name: 'Dashboard', href: '/supplier', icon: LayoutDashboard },
     { name: 'Products', href: '/supplier/products', icon: Package },
@@ -82,7 +85,9 @@ const Sidebar = () => {
           </div>
           <div className="ml-3 flex-1">
             <p className="text-sm font-medium text-gray-900 truncate">
-              {supplierProfile.contactPersonName}
+              {user?.
+                sellerName
+              }
             </p>
             <p className="text-xs text-gray-500 truncate">
               {supplierProfile.sellerName}
@@ -102,7 +107,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <button onClick={() => { handleLogout }} className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+        <button onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
           <LogOut className="w-4 h-4 mr-3" />
           Logout
         </button>

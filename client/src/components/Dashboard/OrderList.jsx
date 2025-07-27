@@ -6,7 +6,7 @@ import { Eye, Filter, Download, CheckCircle, XCircle, Clock, Package } from 'luc
 import { formatCurrency, formatDateTime, getOrderStatusColor, getDeliveryStatusColor } from '../../lib/utils';
 
 const OrderList = () => {
-  const { orders } = useSelector((state) => state.orders);
+  const { userorders } = useSelector((state) => state.orders);
   const [selectedOrder,setSelectedOrder] = useState(null);
 
   const getStatusIcon = (status) => {
@@ -47,7 +47,7 @@ const OrderList = () => {
       </div>
 
       <div className="space-y-4">
-        {orders.map((order) => (
+        {userorders.map((order) => (
           <motion.div
             key={order._id} // Using _id as key as per your data structure
             whileHover={{ scale: 1.01 }}
@@ -87,7 +87,7 @@ const OrderList = () => {
         ))}
       </div>
 
-      {orders.length === 0 && (
+      {userorders.length === 0 && (
         <div className="text-center py-12">
           <ClipboardDocumentListIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <div className="text-gray-500 text-lg mb-2">No orders yet</div>

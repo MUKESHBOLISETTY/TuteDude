@@ -94,7 +94,6 @@ export const deleteOrder = async (req, res) => {
 
 export const updateStatus = async (req, res) => {
     try {
-
         const { orderId, status, deliveryStatus } = req.body;
         console.log("Req.body;", req.body)
         if (!orderId || (!status && !deliveryStatus)) {

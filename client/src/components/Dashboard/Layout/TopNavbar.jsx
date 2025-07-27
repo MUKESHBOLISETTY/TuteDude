@@ -12,8 +12,9 @@ import {
   HomeIcon
 } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleProfileDropdown, logout } from '../../../redux/supplier/authSlice';
+import { toggleProfileDropdown, logout, setUser } from '../../../redux/supplier/authSlice';
 import { setSearchQuery } from '../../../redux/supplier/userProductSlice';
+import { setUserOrders } from '../../../redux/supplier/orderSlice';
 
 const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => {
   const dispatch = useDispatch();
@@ -31,9 +32,14 @@ const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => {
     dispatch(toggleProfileDropdown());
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
+    const handleLogout = () => {
+      dispatch(setUser(null));
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      setUserOrders([]);
+      toast.success('Logged out successfully');
+      navigate('/');
+    };
 
   const profileMenuItems = [
     { id: 'home', name: 'Home', icon: HomeIcon },

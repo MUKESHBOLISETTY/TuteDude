@@ -3,6 +3,7 @@ import { mockOrders } from '../../data/mockData';
 
 const initialState = {
   orders: [],
+  userorders: [],
   filteredOrders: mockOrders,
   loading: false,
   error: null,
@@ -19,6 +20,9 @@ const orderSlice = createSlice({
     },
     setOrders:(state, action) => {
       state.orders = action.payload;
+    },
+    setUserOrders:(state, action) => {
+      state.userorders = action.payload;
     },
     setError: (state, action) => {
       state.error = action.payload;
@@ -83,6 +87,7 @@ export const {
   updateDeliveryStatus,
   setStatusFilter,
   setDateFilter,
+  setUserOrders
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
