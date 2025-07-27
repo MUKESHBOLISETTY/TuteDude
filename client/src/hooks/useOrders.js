@@ -16,7 +16,7 @@ export const useOrders = () => {
             // dispatch(setError("Authentication required for real-time updates."));
             return;
         }
-        const sseUrl = `http://localhost:4000/api/v1/orders/getOrders/${token}`;
+        const sseUrl = `https://tute-dude-three.vercel.app/api/v1/orders/getOrders/${token}`;
         const eventSource = new EventSource(sseUrl);
         //dispatch(setLoading(true));
 
