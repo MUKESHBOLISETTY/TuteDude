@@ -19,23 +19,40 @@ const menuItems = [
 
 const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
   const dispatch = useDispatch();
-const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
+
+  const sidebarVariants = {
+    open: { x: 0 },
+    closed: { x: '-100%' }
+  };
+
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  const sidebarVariants = {
-    open: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
-    closed: { x: '-100%', transition: { type: 'spring', stiffness: 300, damping: 30 } }
-  };
-
   return (
-    <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform 
-        lg:hidden
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        transition-transform duration-300 ease-in-out
-    `}>
+    <>
+      {/* Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            onClick={onClose}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar */}
+      <motion.div
+        variants={sidebarVariants}
+        initial="closed"
+        animate={isOpen ? 'open' : 'closed'}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl z-50 lg:relative lg:translate-x-0"
+      >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-center p-6 border-b">
@@ -99,7 +116,8 @@ const { user } = useSelector((state) => state.auth);
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
+    </>
   );
 };
 
