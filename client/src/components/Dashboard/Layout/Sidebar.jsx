@@ -1,15 +1,16 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  HomeIcon, 
-  ShoppingBagIcon, 
-  CubeIcon, 
-  UserGroupIcon, 
-  UserIcon, 
-  PowerIcon 
+import {
+  HomeIcon,
+  ShoppingBagIcon,
+  CubeIcon,
+  UserGroupIcon,
+  UserIcon,
+  PowerIcon
 } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../../redux/supplier/authSlice';
+import { logout, setUser } from '../../../redux/supplier/authSlice';
+import { setUserOrders } from '../../../redux/supplier/orderSlice';
 
 const menuItems = [
   { id: 'home', name: 'Home', icon: HomeIcon },
@@ -27,7 +28,12 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(setUser(null));
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    setUserOrders([]);
+    toast.success('Logged out successfully');
+    navigate('/');
   };
 
   return (
@@ -81,11 +87,10 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
                         setActiveTab(item.id);
                         onClose();
                       }}
-                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                        isActive
+                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${isActive
                           ? 'bg-green-50 text-green-600 border-l-4 border-green-600'
                           : 'text-gray-700 hover:bg-gray-50'
-                      }`}
+                        }`}
                     >
                       <Icon className="w-5 h-5" />
                       <span className="font-medium">{item.name}</span>

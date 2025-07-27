@@ -44,7 +44,6 @@ const Products = () => {
     const handleSaveProduct = async (productData) => {
         try {
             if (selectedProduct) {
-                console.log(selectedProduct)
                 await updateProduct(selectedProduct._id, productData);
             } else {
                 await addProduct(productData);

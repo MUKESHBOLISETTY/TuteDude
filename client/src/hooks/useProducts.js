@@ -24,6 +24,7 @@ export const useProducts = () => {
     const addProduct = async (productData) => {
         try {
             dispatch(setLoading(true));
+            console.log('Product added:', productData);
             const response = await productsApi.addProduct(productData);
             toast.success('Product added successfully!');
             return response;

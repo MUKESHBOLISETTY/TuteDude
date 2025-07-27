@@ -20,9 +20,6 @@ export const createProduct = async (req, res) => {
       origin,
       image
     } = req.body;
-    console.log("Image type:", typeof image);
-console.log("Image snippet:", typeof image === 'string' ? image.substring(0, 100) : image);
-    console.log("Image",image)
 
     // Required field validation
     const requiredFields = { name, category, price, unit, stock, minOrderQty, expiryDate, origin };

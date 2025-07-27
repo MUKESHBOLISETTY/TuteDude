@@ -7,31 +7,31 @@ import useOrders from '../../hooks/useOrders';
 
 const Orders = () => {
   const dispatch = useDispatch();
-  const { orders,statusFilter, dateFilter } = useSelector(state => state.orders);
+  const { orders, statusFilter, dateFilter } = useSelector(state => state.orders);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const {updateStatus} = useOrders();
+  const { updateStatus } = useOrders();
 
   const handleStatusUpdate = async (orderId, newStatus) => {
-    await updateStatus(orderId,newStatus);
-   
+    await updateStatus(orderId, newStatus);
+
   };
 
   const filteredOrders = orders.filter(order => {
-  const statusMatch = statusFilter === 'all' || order.status === statusFilter;
+    const statusMatch = statusFilter === 'all' || order.status === statusFilter;
 
-  const now = new Date();
-  const deliveredDate = new Date(order.delivery.deliveredOn);
-  let dateMatch = true;
+    const now = new Date();
+    const deliveredDate = new Date(order.delivery.deliveredOn);
+    let dateMatch = true;
 
-  if (dateFilter !== 'all') {
-    const days = parseInt(dateFilter, 10);
-    const cutoffDate = new Date(now.setDate(now.getDate() - days));
-    dateMatch = deliveredDate >= cutoffDate;
-  }
+    if (dateFilter !== 'all') {
+      const days = parseInt(dateFilter, 10);
+      const cutoffDate = new Date(now.setDate(now.getDate() - days));
+      dateMatch = deliveredDate >= cutoffDate;
+    }
 
-  return statusMatch && dateMatch;
-});
+    return statusMatch && dateMatch;
+  });
 
 
   const orderStats = {
@@ -49,7 +49,7 @@ const Orders = () => {
           <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
           <p className="text-gray-600">Manage and track your vendor orders</p>
         </div>
-       
+
       </div>
 
       {/* Stats Cards */}
@@ -239,8 +239,8 @@ const Orders = () => {
             <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
             <p className="text-gray-500">
-              {statusFilter !== 'all' || dateFilter !== 'all' 
-                ? 'Try adjusting your filters' 
+              {statusFilter !== 'all' || dateFilter !== 'all'
+                ? 'Try adjusting your filters'
                 : 'You haven\'t received any orders yet'}
             </p>
           </div>

@@ -122,7 +122,7 @@ import axios from 'axios';
 import store from '../redux/store';
 import toast from 'react-hot-toast';
 const apiService = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1/',
+  baseURL: 'http://localhost:4000/api/v1/',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -160,7 +160,6 @@ apiService.interceptors.response.use(
 );
 
 
-
 // AUTH ENDPOINTS
 export const authApi = {
   login: (data) => apiService.post('/auth/login', data),
@@ -189,9 +188,8 @@ export const authApi = {
 }
 
 export const OrderApi = {
-  createOrder:(data)=> apiService.post('/orders/createOrder',data),
-  updateStatus:(orderId,newStatus) => apiService.put('/orders/updateStatus',{orderId,deliveryStatus:newStatus})
-
+  createOrder: (data) => apiService.post('/orders/createOrder', data),
+  updateStatus: (orderId, newStatus) => apiService.put('/orders/updateStatus', { orderId, deliveryStatus: newStatus })
 }
 
 export const productsApi = {
