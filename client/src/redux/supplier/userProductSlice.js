@@ -164,15 +164,16 @@ const userProductsSlice = createSlice({
             state.filteredUserProducts = action.payload;
         },
         setFilter: (state, action) => {
+            console.log("Setting filter:", action.payload);
             state.filters[action.payload.key] = action.payload.value;
-            userProductsSlice.caseReducers.applyFilters(state);
+            userProductsSlice.caseReducers.applyUserFilters(state);
         },
         setSearchQuery: (state, action) => {
             state.filters.searchQuery = action.payload;
-            userProductsSlice.caseReducers.applyFilters(state);
+            userProductsSlice.caseReducers.applyUserFilters(state);
         },
         applyUserFilters: (state) => {
-            let filtered = [...state.products];
+            let filtered = [...state.userProducts];
 
             // Apply category filter
             if (state.filters.category !== 'All Products') {

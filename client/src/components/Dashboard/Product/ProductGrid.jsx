@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import ProductCard from './ProductCard';
 
 const ProductGrid = () => {
-  const { filteredProducts, loading } = useSelector((state) => state.products);
-
+  const { filteredUserProducts, loading } = useSelector((state) => state.userproducts);
+  console.log("Filtered Products:", filteredUserProducts);
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -24,7 +24,7 @@ const ProductGrid = () => {
     );
   }
 
-  if (filteredProducts.length === 0) {
+  if (filteredUserProducts.length === 0) {
     return (
       <div className="text-center py-12">
         <div className="text-gray-500 text-lg mb-2">No products found</div>
@@ -40,7 +40,7 @@ const ProductGrid = () => {
       transition={{ duration: 0.5 }}
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
     >
-      {filteredProducts.map((product, index) => (
+      {filteredUserProducts.map((product, index) => (
         <motion.div
           key={product.id}
           initial={{ opacity: 0, y: 20 }}
