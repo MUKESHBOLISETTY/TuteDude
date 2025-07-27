@@ -14,7 +14,11 @@ const BuyerDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [cartOpen, setCartOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('home');
-
+    const handleCartClick = () => {
+        setCartOpen(true)
+        const audio = new Audio('/welcoming_supplier.mp3');
+        audio.play();
+    }
     const renderContent = () => {
         switch (activeTab) {
             case 'home':
@@ -39,12 +43,12 @@ const BuyerDashboard = () => {
                     setActiveTab={setActiveTab}
                 />
             </div>
-            
+
             {/* Main Content */}
             <div className="flex-1 flex flex-col">
                 <TopNavbar
                     onMenuClick={() => setSidebarOpen(true)}
-                    onCartClick={() => setCartOpen(true)}
+                    onCartClick={handleCartClick}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                 />

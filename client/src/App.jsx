@@ -43,13 +43,6 @@ function AppContent() {
   const { setupUserSSE, setupProductsSSE } = useSSE()
 
   useEffect(() => {
-    const audio = new Audio('/welcoming_supplier.mp3');
-    audio.play();
-    audio.onended = () => {
-      toast.success('Welcome to the Portal!');
-    }
-  }, []);
-  useEffect(() => {
     if (token) {
       const cleanup = setupUserSSE();
       return cleanup;
