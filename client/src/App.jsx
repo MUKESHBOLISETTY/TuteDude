@@ -17,6 +17,7 @@ import useSSE from './hooks/useSSE';
 import useOrders from './hooks/useOrders';
 import toast, { Toaster } from 'react-hot-toast';
 import BuyerDashboard from './pages/buyer/BuyerDashboard';
+import ProtectedRoute from './ProtectedRoute';
 // const SellerRoute = ({ children }) => {
 //   const { user } = useSelector((state) => state.auth);
 
@@ -79,7 +80,11 @@ function App() {
             <Route path="earnings" element={<Earnings />} />
           </Route>
           {/* BUYER DASHBOARD */}
-          <Route index element={<BuyerDashboard />} />
+          <Route index element={
+            <>{user ?
+              <BuyerDashboard />
+            : <Login />}</>
+          } />
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />

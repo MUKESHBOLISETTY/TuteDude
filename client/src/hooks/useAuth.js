@@ -86,7 +86,7 @@ export const useAuth = () => {
       dispatch(setToken(response.data.UserSchema.token));
       dispatch(setEmail(response.data.UserSchema.email));
       if (response.data.message == "userlogin") {
-        navigate('/menu')
+        navigate('/')
         toast('Logged in successfully.', {
           duration: 2000
         })

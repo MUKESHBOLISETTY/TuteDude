@@ -8,28 +8,18 @@ import {
   UserIcon, 
   PowerIcon 
 } from '@heroicons/react/24/outline';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/supplier/authSlice';
-
-// Interface definition removed for JSX conversion
-// interface SidebarProps {
-//   isOpen: boolean;
-//   onClose: () => void;
-//   activeTab: string;
-//   setActiveTab: (tab: string) => void;
-// }
 
 const menuItems = [
   { id: 'home', name: 'Home', icon: HomeIcon },
   { id: 'orders', name: 'Orders', icon: ShoppingBagIcon },
-  { id: 'products', name: 'My Products', icon: CubeIcon },
-  { id: 'group-orders', name: 'Group Orders', icon: UserGroupIcon },
   { id: 'profile', name: 'Profile', icon: UserIcon },
 ];
 
-const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => { // Removed React.FC
+const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
   const dispatch = useDispatch();
-
+const { user } = useSelector((state) => state.auth);
   const handleLogout = () => {
     dispatch(logout());
   };
@@ -108,7 +98,7 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => { // Removed R
                 <UserIcon className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p className="font-medium text-gray-900">Rajesh Kumar</p>
+                <p className="font-medium text-gray-900">{user?.username}</p>
                 <p className="text-sm text-gray-500">★ 4.7 (136 reviews)</p>
               </div>
             </div>

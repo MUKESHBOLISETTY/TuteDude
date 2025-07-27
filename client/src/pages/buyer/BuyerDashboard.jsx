@@ -16,16 +16,12 @@ const BuyerDashboard = () => {
 
     const renderContent = () => {
         switch (activeTab) {
+              case 'homr':
+                return <HomePage />;
             case 'profile':
                 return <UserProfile />;
             case 'orders':
                 return <OrderList />;
-            case 'products':
-                return <div>My Products - Coming Soon</div>;
-            case 'group-orders':
-                return <div>Group Orders - Coming Soon</div>;
-            case 'tracking':
-                return <div>Delivery Tracking - Coming Soon</div>;
             default:
                 return <HomePage />;
         }
