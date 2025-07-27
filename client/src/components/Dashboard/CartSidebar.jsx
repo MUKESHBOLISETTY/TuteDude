@@ -10,12 +10,10 @@ const CartSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const { createOrder } = useOrders();
   const { items, total, itemCount } = useSelector((state) => state.cart);
-  console.log(items)
   const [deliveryDetails, setDeliveryDetails] = useState({
     address: '',
     distance: 1,
     deliveryfee: 0,
-    sellerId: items[0]?.sellerId || '',
     paymentmethod: 'payondelivery'
   });
 
@@ -47,6 +45,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
         ...deliveryDetails,
         deliveryfee: deliveryDetails.distance * 10
       },
+      sellerId: items[0].sellerId,
       orderlist: items.map(item => ({
         productId: item.id,
         name: item.name,
