@@ -188,7 +188,7 @@ const userProductsSlice = createSlice({
                     filtered = filtered.filter(product =>
                         product.name.toLowerCase().includes(query) ||
                         product.category.toLowerCase().includes(query) ||
-                        product.seller.sellerName.toLowerCase().includes(query)
+                        product.seller?.sellerName.toLowerCase().includes(query)
                     );
                 }
             }

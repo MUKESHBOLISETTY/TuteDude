@@ -5,7 +5,7 @@ import { Seller } from '../models/Seller.js';
 // Create a new product
 export const createProduct = async (req, res) => {
   try {
-    // Destructure all required fields from request body
+    console.log(req.body)
     const {
       name,
       category,
@@ -316,10 +316,7 @@ export const deleteProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.log('Delete Product Error:', error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || 'Failed to delete product'
-    });
+    console.error('Delete Product Error:', error);
+    res.status(500).json({ error: 'Failed to delete product' });
   }
 };
