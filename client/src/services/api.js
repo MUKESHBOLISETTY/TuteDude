@@ -122,7 +122,7 @@ import axios from 'axios';
 import store from '../redux/store';
 import toast from 'react-hot-toast';
 const apiService = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_BASEURL}`,
+  baseURL: `https://tute-dude-three.vercel.app/`,
   headers: {
     'Content-Type': 'application/json',
   },
