@@ -3,6 +3,7 @@ import { login, signup, verifyOtp, resendOtp, updateUser, changePassword, sendFo
 import { getUser } from '../middleware/ServerSentUpdates.js'
 import { rateLimit } from 'express-rate-limit'
 import { authenticateUser } from '../middleware/AuthMiddleware.js'
+import { AiFinder } from "../controllers/AiFinder.js";
 // import { addAddress, deleteAddress, updateAddress } from "../controllers/AddressManagement.js";
 const router = express.Router();
 // Rate limiter
@@ -41,5 +42,7 @@ router.get("/getUser/:token/:email", authenticateUser, getUser);
 router.put("/updateUser", limiter, authenticateUser, updateUser);
 
 router.post("/changePassword", authenticateUser, changePassword);
+
+router.post("/aifinder", limiter, authenticateUser, AiFinder);
 
 export default router;
