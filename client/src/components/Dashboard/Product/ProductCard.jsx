@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { motion } from 'framer-motion';
 import { StarIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/solid';
 import { StarIcon as StarOutlineIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
@@ -7,6 +7,7 @@ import { addToCart } from '../../../redux/supplier/cartSlice';
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const [formData,setFormData] = useState('');
 
   const handleAddToCart = () => {
     dispatch(addToCart({
@@ -18,6 +19,7 @@ const ProductCard = ({ product }) => {
       image: product.image,
       sellerId: product.seller.sellerName,
       maxQuantity: product.stock,
+
     }));
   };
 

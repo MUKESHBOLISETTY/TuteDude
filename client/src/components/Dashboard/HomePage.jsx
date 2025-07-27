@@ -4,6 +4,7 @@ import { EyeIcon } from '@heroicons/react/24/outline';
 import ProductFilters from './Product/ProductFilters';
 import ProductGrid from './Product/ProductGrid';
 import FeedbackModal from './FeedbackModal';
+import { useSelector } from 'react-redux';
 
 const HomePage = () => {
   const [feedbackModal, setFeedbackModal] = useState({
@@ -11,6 +12,7 @@ const HomePage = () => {
     sellerId: '',
     sellerName: ''
   });
+  const {user} = useSelector((state)=>state.auth)
 
   const sections = [
     {
@@ -55,7 +57,7 @@ const HomePage = () => {
         className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-6"
       >
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Welcome back, Rajesh! 👋
+          Welcome back, {user.username}! 👋
         </h1>
         <p className="text-gray-600">
           Discover fresh products from trusted suppliers in your area
