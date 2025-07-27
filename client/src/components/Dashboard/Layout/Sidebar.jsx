@@ -30,24 +30,12 @@ const { user } = useSelector((state) => state.auth);
   };
 
   return (
-    <>
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-
-      {/* Sidebar */}
-      <motion.div
-        variants={sidebarVariants}
-        animate={isOpen ? 'open' : 'closed'}
-        className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl z-50 lg:relative lg:translate-x-0 lg:z-auto"
-      >
+    <div className={`
+        fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform 
+        lg:hidden
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        transition-transform duration-300 ease-in-out
+    `}>
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-center p-6 border-b">
@@ -111,8 +99,7 @@ const { user } = useSelector((state) => state.auth);
             </button>
           </div>
         </div>
-      </motion.div>
-    </>
+      </div>
   );
 };
 

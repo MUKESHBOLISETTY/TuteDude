@@ -38,7 +38,7 @@ const BuyerDashboard = () => {
             />
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col lg:ml-0">
+            <div className="flex-1 flex flex-col w-full">
                 {/* Top Navigation */}
                 <TopNavbar
                     onMenuClick={() => setSidebarOpen(true)}
