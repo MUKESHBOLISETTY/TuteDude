@@ -8,8 +8,9 @@ const orderClients = new Set();
 
 export const createOrder = async (req, res) => {
     try {
-        const { delivery, orderlist, subtotal, totalprice,deliveryStatus,status } = req.body;
-      
+        console.log(req.body)
+        const { delivery, orderlist, subtotal, totalprice, deliveryStatus, status } = req.body;
+
         if (!delivery.address || !orderlist || !delivery.distance || !delivery.deliveryfee || !delivery.paymentmethod || !deliveryStatus) {
             return res.status(400).json({
                 success: false,
@@ -17,7 +18,7 @@ export const createOrder = async (req, res) => {
             })
         }
         const user = await Buyer.findOne({ email: req.user.email })
-    
+
         const order = await Order.create({
             orderId: uniqid(),
             customer: {
@@ -85,32 +86,32 @@ export const deleteOrder = async (req, res) => {
 
 export const updateStatus = async (req, res) => {
     try {
-       
-            const { orderId, status,deliveryStatus } = req.body;
-            console.log("Req.body;",req.body)
-            if (!orderId || (!status && !deliveryStatus)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "All fields are required",
-                })
-            }
-            const order = await Order.findById(orderId);
 
-            if (!order) {
-                return res.status(404).json({ success: false, message: "Order not found." });
-            }
-            
-           if (status) order.status = status;
-           if (deliveryStatus) order.deliveryStatus = deliveryStatus;
+        const { orderId, status, deliveryStatus } = req.body;
+        console.log("Req.body;", req.body)
+        if (!orderId || (!status && !deliveryStatus)) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required",
+            })
+        }
+        const order = await Order.findById(orderId);
 
-            await order.save();
- 
+        if (!order) {
+            return res.status(404).json({ success: false, message: "Order not found." });
+        }
 
-            return res.status(200).json({
-                success: true,
-                message: 'order-status-updated'
-            });
-        
+        if (status) order.status = status;
+        if (deliveryStatus) order.deliveryStatus = deliveryStatus;
+
+        await order.save();
+
+
+        return res.status(200).json({
+            success: true,
+            message: 'order-status-updated'
+        });
+
     } catch (error) {
         return errorHandler(res)
     }

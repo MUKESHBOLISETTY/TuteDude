@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { use } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from '../../../redux/supplier/userProductSlice';
 import { FunnelIcon } from '@heroicons/react/24/outline';
@@ -13,8 +13,10 @@ const sortOptions = [
 
 const ProductFilters = () => {
   const dispatch = useDispatch();
-  const { filters } = useSelector((state) => state.userproducts);
-
+  const { filters, userProducts } = useSelector((state) => state.userproducts);
+  console.log(userProducts);
+  const uniqueCategories = [...new Set(userProducts?.map(product => product.category))];
+  const categories = ['All Products', ...uniqueCategories];
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border mb-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -24,17 +26,16 @@ const ProductFilters = () => {
             <FunnelIcon className="w-5 h-5 text-gray-400" />
             <span className="text-sm font-medium text-gray-700">Filter by:</span>
           </div>
-          
+
           <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => dispatch(setFilter({ key: 'category', value: category }))}
-                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                  filters.category === category
-                    ? 'bg-green-100 text-green-800 border border-green-200'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
-                }`}
+                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${filters.category === category
+                  ? 'bg-green-100 text-green-800 border border-green-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                  }`}
               >
                 {category}
               </button>

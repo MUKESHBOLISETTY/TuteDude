@@ -10,14 +10,16 @@ const ProductCard = ({ product }) => {
   const [formData,setFormData] = useState('');
 
   const handleAddToCart = () => {
+    console.log('Adding to cart:', product);
     dispatch(addToCart({
-      id: product.id,
+      id: product._id,
       name: product.name,
       price: product.price,
       quantity: product.minOrderQty,
       unit: product.unit,
       image: product.image,
-      sellerId: product.seller.sellerName,
+      sellerName: product.seller.sellerName,
+      sellerId: product.seller._id,
       maxQuantity: product.stock,
 
     }));

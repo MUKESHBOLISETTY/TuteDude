@@ -67,29 +67,6 @@ const HomePage = () => {
       {/* Filters */}
       <ProductFilters />
 
-      {/* Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
-      >
-        {sections.map((section, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-sm border">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="font-semibold text-gray-900">{section.title}</h3>
-                <p className="text-sm text-gray-600">{section.subtitle}</p>
-              </div>
-              <button className="flex items-center space-x-1 text-green-600 hover:text-green-700 text-sm font-medium">
-                <EyeIcon className="w-4 h-4" />
-                <span>{section.action}</span>
-              </button>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-
       {/* Products Grid */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

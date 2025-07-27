@@ -14,6 +14,7 @@ import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { setUserProducts } from '../redux/supplier/userProductSlice';
 import { useNavigate } from 'react-router-dom';
+import { setOrders } from '../redux/supplier/orderSlice';
 
 export const useSSE = () => {
     const dispatch = useDispatch();
@@ -38,6 +39,7 @@ export const useSSE = () => {
                 console.log('Received initial user data (SSE):', data);
                 dispatch(setUser(data));
                 dispatch(setEmail(data.email));
+                dispatch(setOrders(data.orders));
                 dispatch(setProducts(data.products || []));
                 dispatch(setFilteredProducts(data.products || []));
                 dispatch(setLoading(false));
@@ -60,6 +62,7 @@ export const useSSE = () => {
                 const data = JSON.parse(event.data);
                 console.log('Received user update (SSE):', data);
                 dispatch(setUser(data));
+                dispatch(setOrders(data.orders));
                 const productdata = data.products ? data.products : []
                 dispatch(setProducts(productdata));
                 dispatch(setFilteredProducts(productdata));

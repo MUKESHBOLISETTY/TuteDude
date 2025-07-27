@@ -14,7 +14,6 @@ const cartSlice = createSlice({
       const existingItem = state.items.find(item => item.id === action.payload.id);
       
       if (existingItem) {
-        // Ensure adding quantity doesn't exceed maxQuantity
         const newQuantity = existingItem.quantity + action.payload.quantity;
         existingItem.quantity = newQuantity > existingItem.maxQuantity 
           ? existingItem.maxQuantity 
@@ -24,12 +23,10 @@ const cartSlice = createSlice({
       }
       
       cartSlice.caseReducers.calculateTotals(state);
-      localStorage.setItem('cart', JSON.stringify(state.items));
     },
     removeFromCart: (state, action) => {
       state.items = state.items.filter(item => item.id !== action.payload);
       cartSlice.caseReducers.calculateTotals(state);
-      localStorage.setItem('cart', JSON.stringify(state.items));
     },
     updateQuantity: (state, action) => {
       const item = state.items.find(item => item.id === action.payload.id);
@@ -37,13 +34,11 @@ const cartSlice = createSlice({
         item.quantity = action.payload.quantity;
       }
       cartSlice.caseReducers.calculateTotals(state);
-      localStorage.setItem('cart', JSON.stringify(state.items));
     },
     clearCart: (state) => {
       state.items = [];
       state.total = 0;
       state.itemCount = 0;
-      localStorage.removeItem('cart');
     },
     calculateTotals: (state) => {
       state.total = state.items.reduce((total, item) => total + (item.price * item.quantity), 0);
