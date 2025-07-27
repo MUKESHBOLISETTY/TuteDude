@@ -180,14 +180,17 @@ const userProductsSlice = createSlice({
                 filtered = filtered.filter(product => product.category === state.filters.category);
             }
 
-            // Apply search filter
             if (state.filters.searchQuery) {
-                const query = state.filters.searchQuery.toLowerCase();
-                filtered = filtered.filter(product =>
-                    product.name.toLowerCase().includes(query) ||
-                    product.category.toLowerCase().includes(query) ||
-                    product.seller.toLowerCase().includes(query)
-                );
+                if (state.filters.searchQuery.trim() === '') {
+                    filtered = [...state.userProducts];
+                } else {
+                    const query = state.filters.searchQuery.toLowerCase();
+                    filtered = filtered.filter(product =>
+                        product.name.toLowerCase().includes(query) ||
+                        product.category.toLowerCase().includes(query) ||
+                        product.seller.sellerName.toLowerCase().includes(query)
+                    );
+                }
             }
 
             // Apply sorting
