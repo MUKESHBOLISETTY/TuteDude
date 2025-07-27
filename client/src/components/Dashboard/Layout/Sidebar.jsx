@@ -9,7 +9,7 @@ import {
   PowerIcon 
 } from '@heroicons/react/24/outline';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/userSlice';
+import { logout } from '../../../redux/supplier/authSlice';
 
 // Interface definition removed for JSX conversion
 // interface SidebarProps {

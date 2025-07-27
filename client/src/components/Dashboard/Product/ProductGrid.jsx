@@ -1,11 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
-// RootState import is removed as it's TypeScript specific
 import ProductCard from './ProductCard';
 
 const ProductGrid = () => {
-  // Type annotation for useSelector state is removed for JSX conversion
   const { filteredProducts, loading } = useSelector((state) => state.products);
 
   if (loading) {

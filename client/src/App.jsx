@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useSSE from './hooks/useSSE';
 import useOrders from './hooks/useOrders';
 import toast, { Toaster } from 'react-hot-toast';
+import BuyerDashboard from './pages/buyer/BuyerDashboard';
 // const SellerRoute = ({ children }) => {
 //   const { user } = useSelector((state) => state.auth);
 
@@ -33,7 +34,7 @@ function App() {
     const audio = new Audio('/welcoming_supplier.mp3');
     audio.play();
     audio.onended = () => {
-    toast.success('Welcome to the Portal!');
+      toast.success('Welcome to the Portal!');
     }
   }, []);
   useEffect(() => {
@@ -77,7 +78,8 @@ function App() {
             <Route path="delivery" element={<Delivery />} />
             <Route path="earnings" element={<Earnings />} />
           </Route>
-
+          {/* BUYER DASHBOARD */}
+          <Route index element={<BuyerDashboard />} />
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />

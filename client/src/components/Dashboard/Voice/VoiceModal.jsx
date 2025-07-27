@@ -2,12 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon, MicrophoneIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
-// RootState import is removed as it's TypeScript specific
-
-// Placeholder for useVoiceSearch hook if not provided
-// In a real application, you would import your actual hook.
 const useVoiceSearch = () => {
-  // These functions would typically interact with Web Speech API or a similar service
   const startVoiceSearch = () => console.log("Starting voice search...");
   const stopVoiceSearch = () => console.log("Stopping voice search...");
   const closeVoiceModal = () => console.log("Closing voice modal...");
@@ -16,7 +11,6 @@ const useVoiceSearch = () => {
 
 
 const VoiceModal = () => {
-  // Type annotation for useSelector state is removed for JSX conversion
   const { isModalOpen, isListening, transcript, error } = useSelector((state) => state.voice);
   const { stopVoiceSearch, closeVoiceModal } = useVoiceSearch();
 

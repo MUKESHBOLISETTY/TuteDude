@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { UserIcon, PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
-// RootState import is removed as it's TypeScript specific
-import { updateUser } from '../../store/slices/userSlice';
+import { updateUser } from '../../redux/supplier/authSlice';
 
 const UserProfile = () => {
   const dispatch = useDispatch();
-  // Type annotation for useSelector state is removed for JSX conversion
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
-  // Initialize formData with an empty object if user is null/undefined to prevent errors
   const [formData, setFormData] = useState(user || {});
 
   const handleSave = () => {

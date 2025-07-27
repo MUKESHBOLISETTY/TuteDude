@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { EyeIcon } from '@heroicons/react/24/outline';
-// Assuming these components are also in JSX or compatible
-import ProductFilters from './ProductFilters';
-import ProductGrid from './ProductGrid';
+import ProductFilters from './Product/ProductFilters';
+import ProductGrid from './Product/ProductGrid';
 import FeedbackModal from './FeedbackModal';
 
 const HomePage = () => {

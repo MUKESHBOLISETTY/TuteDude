@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 // RootState import is removed as it's TypeScript specific
-import { setFilter } from '../../store/slices/productsSlice';
+import { setFilter } from '../../../redux/supplier/userProductSlice';
 import { FunnelIcon } from '@heroicons/react/24/outline';
 
 const categories = ['All Products', 'Vegetables', 'Dairy', 'Spices'];
@@ -14,8 +14,7 @@ const sortOptions = [
 
 const ProductFilters = () => {
   const dispatch = useDispatch();
-  // Type annotation for useSelector state is removed for JSX conversion
-  const { filters } = useSelector((state) => state.products);
+  const { filters } = useSelector((state) => state.userproducts);
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border mb-6">

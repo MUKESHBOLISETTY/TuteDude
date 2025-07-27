@@ -11,27 +11,17 @@ import {
   TruckIcon
 } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
-// RootState import is removed as it's TypeScript specific
-import { toggleProfileDropdown, logout } from '../../store/slices/userSlice';
-import { setSearchQuery } from '../../store/slices/productsSlice';
+import { toggleProfileDropdown, logout } from '../../../redux/supplier/authSlice';
+import { setSearchQuery } from '../../../redux/supplier/userProductSlice';
 
-// Interface definition removed for JSX conversion
-// interface TopNavbarProps {
-//   onMenuClick: () => void;
-//   onCartClick: () => void;
-//   activeTab: string;
-//   setActiveTab: (tab: string) => void;
-// }
-
-const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => { // Removed React.FC
+const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => { 
   const dispatch = useDispatch();
-  // Type annotation for useSelector state is removed for JSX conversion
   const { itemCount } = useSelector((state) => state.cart);
-  const { user, showProfileDropdown } = useSelector((state) => state.user);
-  const { searchQuery } = useSelector((state) => state.products.filters);
+  const { user, showProfileDropdown } = useSelector((state) => state.auth);
+  const { searchQuery } = useSelector((state) => state.userproducts.filters);
   const [localSearch, setLocalSearch] = useState(searchQuery);
 
-  const handleSearch = (e) => { // Removed React.FormEvent
+  const handleSearch = (e) => { 
     e.preventDefault();
     dispatch(setSearchQuery(localSearch));
   };

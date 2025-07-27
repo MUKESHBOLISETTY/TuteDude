@@ -5,6 +5,7 @@ const initialState = {
   email: localStorage.getItem("email") ? localStorage.getItem("email") : null,
   user: null,
   error: null,
+  showProfileDropdown: false,
 };
 
 const authSlice = createSlice({
@@ -13,6 +14,18 @@ const authSlice = createSlice({
   reducers: {
     setUser(state, value) {
       state.user = value.payload;
+    },
+    updateUser: (state, action) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
+    logout: (state) => {
+      state.user = null;
+      state.showProfileDropdown = false;
+    },
+    toggleProfileDropdown: (state) => {
+      state.showProfileDropdown = !state.showProfileDropdown;
     },
     setLoading(state, value) {
       state.loading = value.payload;
@@ -30,6 +43,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLoading, setToken, setEmail, setUser, setError } = authSlice.actions;
+export const { setLoading, setToken, setEmail, setUser, setError, updateUser, logout, toggleProfileDropdown } = authSlice.actions;
 
 export default authSlice.reducer;
