@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Vegetables', 'Fruits', 'Dairy', 'Spices'],
+    enum: ['Vegetables', 'Fruits', 'Dairy', 'Spices','Breads'],
     required: true
   },
   price: {
@@ -68,6 +68,9 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Seller',
     required: true
+  },
+  image:{
+    type:String
   }
 }, {
   timestamps: true
