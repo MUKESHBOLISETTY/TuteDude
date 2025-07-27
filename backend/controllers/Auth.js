@@ -277,7 +277,8 @@ export const sendForgotPasswordOtp = async (req, res) => {
                 message: "Mail is required"
             });
         }
-        const checkUserPresent = await User.findOne({ email });
+        
+        const checkUserPresent = await Buyer.findOne({ email }) || await Seller.findOne({ email });
         if (checkUserPresent) {
             const otpConfig = {
                 upperCaseAlphabets: false,
@@ -286,19 +287,17 @@ export const sendForgotPasswordOtp = async (req, res) => {
                 digits: true
             };
             let otp = otpGenerator.generate(6, otpConfig);
-            //check unique otp or not
+            
+            // Check unique OTP
             let result = await ForgotPassword.findOne({ otp: otp });
             while (result) {
                 otp = otpGenerator.generate(6, otpConfig);
-                //check unique otp or not
                 result = await ForgotPassword.findOne({ otp: otp });
             }
 
             const otpPayload = { email, otp };
-            console.log(otpPayload)
-            const otpBody = await ForgotPassword.create(otpPayload);
-            console.log("OTP body : ", otpBody);
-            //await mailSender(email, "Forgot Password verification email send by Event Sphere", otpTemplate(otp));
+            await ForgotPassword.create(otpPayload);
+            
             return res.status(200).json({
                 success: true,
                 message: "otpsent"
@@ -310,58 +309,61 @@ export const sendForgotPasswordOtp = async (req, res) => {
             });
         }
     } catch (error) {
-        return errorHandler(res)
+        return errorHandler(res);
     }
 }
 
 export const verifyForgotPasswordOtp = async (req, res) => {
     try {
         const { email, otp } = req.body;
-        if (!email || email.trim() === '') {
+        if (!email || !otp || email.trim() === '' || otp.trim() === '') {
             return res.status(400).json({
                 success: false,
-                message: "Mail is required"
+                message: "Email and OTP are required"
             });
         }
-        if (!otp || otp.trim() === '') {
-            return res.status(400).json({
-                success: false,
-                message: "Otp is required"
-            });
-        }
-        const checkUserPresent = await User.findOne({ email });
+
+        const checkUserPresent = await Buyer.findOne({ email }) || await Seller.findOne({ email });
         if (checkUserPresent) {
             const recentOtp = await ForgotPassword.find({ email }).sort({ createdAt: -1 }).limit(1);
-            if (recentOtp.length == 0) {
+            
+            if (recentOtp.length === 0) {
                 return res.status(400).json({
                     success: false,
                     message: "Invalid OTP"
                 });
-            } else if (recentOtp[0].otp == otp) {
-                const user = await User.findOne({ email });
-                const uniqueid = uniqid();
-                user.forgottoken = uniqueid;
-                await user.save();
+            }
 
-                // Delete token after 3 minutes (180,000 milliseconds)
+            if (recentOtp[0].otp === otp) {
+                const uniqueid = uniqid();
+                checkUserPresent.forgottoken = uniqueid;
+                await checkUserPresent.save();
+
+                // Delete token after 3 minutes
                 setTimeout(async () => {
-                    user.forgottoken = null;
-                    await user.save();
+                    checkUserPresent.forgottoken = null;
+                    await checkUserPresent.save();
                 }, 180000);
+
                 return res.status(200).json({
                     success: true,
                     message: "otpverified",
                     uniqueid
                 });
             }
-        } else {
+
             return res.status(400).json({
                 success: false,
-                message: "Invalid User"
+                message: "Invalid OTP"
             });
         }
+
+        return res.status(400).json({
+            success: false,
+            message: "Invalid User"
+        });
     } catch (error) {
-        return errorHandler(res)
+        return errorHandler(res);
     }
 }
 
@@ -369,62 +371,52 @@ export const resetPassword = async (req, res) => {
     try {
         const { email, newPassword, token, confirmPassword } = req.body;
 
-        if (!email || email.trim() === '') {
+        if (!email || !newPassword || !token || !confirmPassword) {
             return res.status(400).json({
                 success: false,
-                message: "Mail is required"
+                message: "All fields are required"
             });
         }
 
-        const user = await User.findOne({ email });
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Passwords do not match"
+            });
+        }
+
+        const user = await Buyer.findOne({ email }) || await Seller.findOne({ email });
         if (!user) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid User"
             });
         }
-        if (!token) {
-            return res.status(400).json({
-                success: false,
-                message: "Something went wrong"
-            });
-        }
-        if (!newPassword || newPassword.trim() === '' || !confirmPassword || confirmPassword.trim() === '') {
-            return res.status(400).json({
-                success: false,
-                message: "Password is required"
-            });
-        }
+
         if (user.forgottoken !== token) {
             return res.status(401).json({
                 success: false,
-                message: "Invalid User"
+                message: "Invalid or expired reset token"
             });
         }
 
-        // if (!(await bcrypt.compare(currentPassword, user.password))) {
-        //     return res.status(401).json({
-        //         success: false,
-        //         message: "Old Password Incorrect"
-        //     });
-        // }
-
-
         // Hash new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        const newtoken = await tokenGenerator(email)
+        const newtoken = await tokenGenerator(email);
+        
         user.password = hashedPassword;
         user.token = newtoken;
-        if (newtoken) user.forgottoken = null;
+        user.forgottoken = null;
 
         await user.save();
+        await ForgotPassword.deleteOne({ email }); // Clean up OTP
 
         return res.status(200).json({
             success: true,
             message: "passwordchanged"
         });
     } catch (error) {
-        return errorHandler(res)
+        return errorHandler(res);
     }
 }
 

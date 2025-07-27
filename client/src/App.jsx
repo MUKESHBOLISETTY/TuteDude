@@ -29,8 +29,19 @@ import ProtectedRoute from './ProtectedRoute';
 // };
 
 function App() {
+  return (
+    <Provider store={store}>
+      <Router>
+        <AppContent />
+      </Router>
+    </Provider>
+  );
+}
+
+function AppContent() {
   const { token, user } = useSelector((state) => state.auth);
   const { setupUserSSE, setupProductsSSE } = useSSE()
+
   useEffect(() => {
     const audio = new Audio('/welcoming_supplier.mp3');
     audio.play();
@@ -58,39 +69,33 @@ function App() {
   }, [token, setupOrdersSSE]);
 
   return (
-    <Provider store={store}>
-      <Router>
-        <Toaster />
-        <Routes>
-          {/* Auth Routes */}
-          <Route path="/auth/signup" element={<>{user ? <NotFound /> : <SignUp />}</>} />
-          <Route path="/auth/login" element={<>{user ? <NotFound /> : <Login />}</>} />
-          <Route path="/auth/verifyotp/:email" element={<VerifyOTP />} />
+    <>
+      <Toaster />
+      <Routes>
+        {/* Auth Routes */}
+        <Route path="/auth/signup" element={<>{user ? <NotFound /> : <SignUp />}</>} />
+        <Route path="/auth/login" element={<>{user ? <NotFound /> : <Login />}</>} />
+        <Route path="/auth/verifyotp/:email" element={<VerifyOTP />} />
 
-          <Route path="/" element={<Navigate to="/supplier" replace />} />
-          <Route path="/supplier" element={
-            // <SellerRoute>
-            <SupplierLayout />
-            // </SellerRoute>
-          }>
-            <Route index element={<Dashboard />} />
-            <Route path="products" element={<Products />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="delivery" element={<Delivery />} />
-            <Route path="earnings" element={<Earnings />} />
-          </Route>
-          {/* BUYER DASHBOARD */}
-          <Route index element={
-            <>{user ?
-              <BuyerDashboard />
+        <Route path="/supplier" element={<>{user?.type == "Seller" ?
+          <SupplierLayout /> : <Login />}</>}>
+          <Route index element={<Dashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="delivery" element={<Delivery />} />
+          <Route path="earnings" element={<Earnings />} />
+        </Route>
+        {/* BUYER DASHBOARD */}
+        <Route path='/' element={
+          <>{user?.type == "Buyer" ?
+            <BuyerDashboard />
             : <Login />}</>
-          } />
+        } />
 
-          {/* 404 Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </Provider>
+        {/* 404 Route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 

@@ -9,7 +9,6 @@ export const authenticateUser = async (req, res, next) => {
     try {
         // console.log("body" ,req.body.token);
         // console.log("cookies",req.cookies.token);
-        //  console.log("header",req.header("Authorization"));
         // const token = req.header("Authorization").replace("Bearer ", "");
         const token = req.params.token || req.header("Authorization").replace("Bearer ", "");
         if (!token) {

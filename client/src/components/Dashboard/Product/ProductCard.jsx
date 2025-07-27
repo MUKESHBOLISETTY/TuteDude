@@ -120,7 +120,7 @@ const ProductCard = ({ product }) => {
 
         {/* Seller and Origin */}
         <div className="flex items-center justify-between mb-2 text-xs text-gray-600">
-          <span>by {product.seller.sellerName}</span>
+          <span>by {product.seller?.sellerName}</span>
           <div className="flex items-center">
             <MapPinIcon className="w-3 h-3 mr-1" />
             <span>From {product.origin}</span>

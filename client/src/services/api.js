@@ -184,7 +184,8 @@ export const authApi = {
   updateAddress: (addressId, data) => apiService.post('/auth/updateAddress', { addressId, data }),
   deleteAddress: (addressId) => apiService.put('/auth/deleteAddress', { addressId }),
 
-
+  // AI Finder
+  aiFinder: (query) => apiService.post('/auth/aifinder', { query }),
 }
 
 export const OrderApi = {
@@ -192,6 +193,7 @@ export const OrderApi = {
   updateStatus:(orderId,newStatus) => apiService.put('/orders/updateStatus',{orderId,deliveryStatus:newStatus})
 
 }
+
 export const productsApi = {
   // Products Management
   addProduct: (data) => apiService.post('/product/createProduct', data),

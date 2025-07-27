@@ -13,9 +13,11 @@ import { setProducts, setFilteredProducts } from '../redux/supplier/productSlice
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { setUserProducts } from '../redux/supplier/userProductSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const useSSE = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { loading, token, user, error, email } = useSelector((state) => state.auth);
 
     const setupUserSSE = useCallback(() => {
@@ -35,9 +37,17 @@ export const useSSE = () => {
                 const data = JSON.parse(event.data);
                 console.log('Received initial user data (SSE):', data);
                 dispatch(setUser(data));
+                dispatch(setEmail(data.email));
                 dispatch(setProducts(data.products || []));
                 dispatch(setFilteredProducts(data.products || []));
                 dispatch(setLoading(false));
+
+                // Add navigation based on user type
+                if (data.type === 'Buyer') {
+                    navigate('/', { replace: true });
+                } else if (data.type === 'Seller') {
+                    navigate('/supplier', { replace: true });
+                }
             } catch (e) {
                 console.error('Error parsing initial SSE data:', e);
                 dispatch(setError('Failed to parse initial user data.'));
@@ -48,12 +58,12 @@ export const useSSE = () => {
         eventSource.addEventListener('user_update', (event) => {
             try {
                 const data = JSON.parse(event.data);
-
                 console.log('Received user update (SSE):', data);
                 dispatch(setUser(data));
                 const productdata = data.products ? data.products : []
                 dispatch(setProducts(productdata));
                 dispatch(setFilteredProducts(productdata));
+
                 dispatch(setLoading(false))
             } catch (e) {
                 console.error('Error parsing user update SSE data:', e);
@@ -83,7 +93,7 @@ export const useSSE = () => {
         eventSource.onerror = (event) => {
             console.error('Generic EventSource error:', event);
         };
-    }, [token, dispatch]);
+    }, [token, dispatch, navigate]); // Add navigate to dependency array
 
     const setupProductsSSE = useCallback(() => {
         if (!token) {

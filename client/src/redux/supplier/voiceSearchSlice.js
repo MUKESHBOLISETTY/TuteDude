@@ -1,28 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isOpen: false,
   isListening: false,
+  isModalOpen: false,
   transcript: '',
   error: null,
+  isProcessing: false,
 };
 
-const voiceSearchSlice = createSlice({
-  name: 'voiceSearch',
+const voiceSlice = createSlice({
+  name: 'voice',
   initialState,
   reducers: {
-    openVoiceSearch: (state) => {
-      state.isOpen = true;
-      state.error = null;
-    },
-    closeVoiceSearch: (state) => {
-      state.isOpen = false;
-      state.isListening = false;
-      state.transcript = '';
-      state.error = null;
-    },
     startListening: (state) => {
       state.isListening = true;
+      state.isModalOpen = true;
       state.error = null;
     },
     stopListening: (state) => {
@@ -34,17 +26,20 @@ const voiceSearchSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
       state.isListening = false;
+      state.isProcessing = false;
+    },
+    setProcessing: (state, action) => {
+      state.isProcessing = action.payload;
+    },
+    closeModal: (state) => {
+      state.isModalOpen = false;
+      state.isListening = false;
+      state.transcript = '';
+      state.error = null;
+      state.isProcessing = false;
     },
   },
 });
 
-export const {
-  openVoiceSearch,
-  closeVoiceSearch,
-  startListening,
-  stopListening,
-  setTranscript,
-  setError,
-} = voiceSearchSlice.actions;
-
-export default voiceSearchSlice.reducer;
+export const { startListening, stopListening, setTranscript, setError, setProcessing, closeModal } = voiceSlice.actions;
+export default voiceSlice.reducer;
