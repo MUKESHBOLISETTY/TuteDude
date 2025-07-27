@@ -19,7 +19,7 @@ const ProductCard = ({ product }) => {
       unit: product.unit,
       image: product.image,
       sellerName: product.seller.sellerName,
-      sellerId: product.seller._id.toString(),
+      sellerId: product.seller._id,
       maxQuantity: product.stock,
 
     }));
