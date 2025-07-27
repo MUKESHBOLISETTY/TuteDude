@@ -12,59 +12,69 @@ export const AiFinder = async (req, res) => {
 1. The core food item requested
 2. The corresponding category from this predefined list:
 
-- Vegetables
-- Fruits
-- Dairy
-- Beverages
-- Bakery
-- Snacks
-- Grains & Cereals
-- Meat & Seafood
-- Spices & Condiments
-- Ready-to-eat
-- Others
+- Vegetables  
+- Fruits  
+- Dairy  
+- Beverages  
+- Bakery  
+- Snacks  
+- Grains & Cereals  
+- Meat & Seafood  
+- Spices & Condiments  
+- Ready-to-eat  
+- Others  
 
-If no food item is present, output null for both fields.
+**Important**:  
+- Always return the **food item name in English**, even if the user mentions it in another language (e.g., Hindi like "tamatar" → "tomato", "doodh" → "milk").  
+- Ignore non-food phrases, greetings, and general messages.
+- If no food item is present, output null for both fields.
 
-Return the output in the exact format:
-* Food Item: [name or null]
+Return the output in this exact format:  
+* Food Item: [name in English or null]  
 * Category: [category or null]
+
+---
 
 ### Examples:
 
-User Input: "Can I get 2 liters of milk?"
-* Food Item: milk
-* Category: Dairy
+User Input: "Can I get 2 liters of milk?"  
+* Food Item: milk  
+* Category: Dairy  
 
-User Input: "I need a dozen bananas."
-* Food Item: bananas
-* Category: Fruits
+User Input: "I need a dozen bananas."  
+* Food Item: bananas  
+* Category: Fruits  
 
-User Input: "I would like a bottle of Coke."
-* Food Item: Coke
-* Category: Beverages
+User Input: "I would like a bottle of Coke."  
+* Food Item: Coke  
+* Category: Beverages  
 
-User Input: "Hi, just checking your service hours."
-* Food Item: null
-* Category: null
+User Input: "Hi, just checking your service hours."  
+* Food Item: null  
+* Category: null  
 
-User Input: "Order me a garlic naan and butter paneer."
-* Food Item: garlic naan
-* Category: Bakery
+User Input: "Order me a garlic naan and butter paneer."  
+* Food Item: garlic naan  
+* Category: Bakery  
 
-User Input: "I want masala chips."
-* Food Item: masala chips
-* Category: Snacks
+User Input: "I want masala chips."  
+* Food Item: masala chips  
+* Category: Snacks  
 
-User Input: "Add rice to the order."
-* Food Item: rice
-* Category: Grains & Cereals
+User Input: "Add rice to the order."  
+* Food Item: rice  
+* Category: Grains & Cereals  
 
-User Input: "${query}"
+User Input: "Mujhe tamatar chahiye."  
+* Food Item: tomato  
+* Category: Vegetables  
 
-Fill in based on user input above in the format:
-* Food Item: ...
-* Category: ...`;
+User Input: "${query}"  
+
+Fill in based on user input above in the format:  
+* Food Item: ...  
+* Category: ...
+`;
 
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
@@ -75,7 +85,7 @@ Fill in based on user input above in the format:
                 },
             }
         });
-
+console.log('AI Finder Response:', response.candidates[0].content.parts[0].text); 
         return res.status(200).json({ data: response.candidates[0].content.parts[0].text });
     } catch (error) {
         console.error('AI Finder Error:', error);

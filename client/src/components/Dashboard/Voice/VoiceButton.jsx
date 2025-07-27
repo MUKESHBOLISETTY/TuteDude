@@ -1,20 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MicrophoneIcon } from '@heroicons/react/24/solid';
-// Assuming useVoiceSearch hook is defined elsewhere in plain JS or compatible.
-// For demonstration, a placeholder hook is provided if the actual implementation isn't available.
-
-// Placeholder for useVoiceSearch hook if not provided
-const useVoiceSearch = () => {
-  const startVoiceSearch = () => {
-    console.log("Voice search initiated (placeholder function)");
-    // Implement actual voice search logic here
-    // e.g., using Web Speech API or a third-party library
-    alert("Voice search is not fully implemented in this demo.");
-  };
-  return { startVoiceSearch };
-};
-
+import { useVoiceSearch } from '../../../hooks/useVoiceSearch';
 
 const VoiceButton = () => {
   const { startVoiceSearch } = useVoiceSearch();

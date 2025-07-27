@@ -43,6 +43,6 @@ router.put("/updateUser", limiter, authenticateUser, updateUser);
 
 router.post("/changePassword", authenticateUser, changePassword);
 
-router.post("/aifinder", limiter, authenticateUser, AiFinder);
+router.post("/aifinder", authenticateUser, AiFinder);
 
 export default router;

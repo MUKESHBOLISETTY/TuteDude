@@ -2,17 +2,12 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon, MicrophoneIcon } from '@heroicons/react/24/outline';
 import { useSelector } from 'react-redux';
-const useVoiceSearch = () => {
-  const startVoiceSearch = () => console.log("Starting voice search...");
-  const stopVoiceSearch = () => console.log("Stopping voice search...");
-  const closeVoiceModal = () => console.log("Closing voice modal...");
-  return { startVoiceSearch, stopVoiceSearch, closeVoiceModal };
-};
+import { useVoiceSearch } from '../../../hooks/useVoiceSearch';
 
 
 const VoiceModal = () => {
-  const { isModalOpen, isListening, transcript, error } = useSelector((state) => state.voice);
-  const { stopVoiceSearch, closeVoiceModal } = useVoiceSearch();
+  const { isModalOpen, isListening, transcript, error, isProcessing } = useSelector((state) => state.voice);
+  const { startVoiceSearch, stopVoiceSearch, closeVoiceModal } = useVoiceSearch();
 
   return (
     <AnimatePresence>
@@ -95,15 +90,37 @@ const VoiceModal = () => {
                     </div>
                   </motion.div>
                 </div>
+              ) : isProcessing ? (
+                <div>
+                  <h3 className="text-lg font-medium text-blue-600 mb-2">Processing...</h3>
+                  <p className="text-gray-600">Analyzing your request with AI</p>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    className="flex justify-center mt-3"
+                  >
+                    <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                  </motion.div>
+                </div>
               ) : transcript ? (
                 <div>
                   <h3 className="text-lg font-medium text-green-600 mb-2">Search Complete!</h3>
-                  <p className="text-gray-700">"{transcript}"</p>
+                  <p className="text-gray-700 whitespace-pre-line">"{transcript}"</p>
                 </div>
               ) : error ? (
                 <div>
                   <h3 className="text-lg font-medium text-red-600 mb-2">Error</h3>
-                  <p className="text-gray-700">{error}</p>
+                  <p className="text-gray-700 mb-3">{error}</p>
+                  {error.includes('Microphone access denied') && (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm">
+                      <p className="text-yellow-800 font-medium mb-1">How to enable microphone:</p>
+                      <ul className="text-yellow-700 text-xs space-y-1">
+                        <li>• Click the microphone icon in your browser's address bar</li>
+                        <li>• Select "Allow" for microphone access</li>
+                        <li>• Refresh the page and try again</li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div>
@@ -122,12 +139,31 @@ const VoiceModal = () => {
                 >
                   Stop
                 </button>
+              ) : !transcript && !error && !isProcessing ? (
+                <button
+                  onClick={startVoiceSearch}
+                  className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                >
+                  Start
+                </button>
+              ) : error && error.includes('Microphone access denied') ? (
+                <button
+                  onClick={startVoiceSearch}
+                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Try Again
+                </button>
               ) : null}
               <button
                 onClick={closeVoiceModal}
-                className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                disabled={isProcessing}
+                className={`px-6 py-2 rounded-lg transition-colors ${
+                  isProcessing 
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                    : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+                }`}
               >
-                Cancel
+                {transcript || error ? 'Close' : 'Cancel'}
               </button>
             </div>
           </motion.div>
