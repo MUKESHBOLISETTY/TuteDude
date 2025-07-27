@@ -71,12 +71,12 @@ const UserProfile = () => {
               {isEditing ? (
                 <input
                   type="text"
-                  value={formData.name || ''}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={formData.username || ''}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
                 />
               ) : (
-                <p className="text-gray-900">{user.name}</p>
+                <p className="text-gray-900">{user.username}</p>
               )}
             </div>
 
@@ -105,12 +105,12 @@ const UserProfile = () => {
               {isEditing ? (
                 <input
                   type="tel"
-                  value={formData.phone || ''}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  value={formData.phonenumber || ''}
+                  onChange={(e) => setFormData({ ...formData, phonenumber: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500"
                 />
               ) : (
-                <p className="text-gray-900">{user.phone}</p>
+                <p className="text-gray-900">{user.phonenumber}</p>
               )}
             </div>
 

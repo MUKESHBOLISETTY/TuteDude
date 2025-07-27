@@ -54,11 +54,11 @@ export const getProducts = async (req, res) => {
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');
 
-        if (req.user.type == "Seller") {
-            res.write(`event: restricted\n`);
-            res.write(`data: ${JSON.stringify({ message: 'Failed to retrieve initial product data.', code: 'USER_RESTRICTED' })}\n\n`);
-            res.end();
-        }
+        // if (req.user.type == "Seller") {
+        //     res.write(`event: restricted\n`);
+        //     res.write(`data: ${JSON.stringify({ message: 'Failed to retrieve initial product data.', code: 'USER_RESTRICTED' })}\n\n`);
+        //     res.end();
+        // }
 
         const initialProductData = await getProductsData();
         Clients.add(res);

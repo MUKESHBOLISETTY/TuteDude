@@ -12,6 +12,7 @@ import {
 import { setProducts, setFilteredProducts } from '../redux/supplier/productSlice';
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
+import { setUserProducts } from '../redux/supplier/userProductSlice';
 
 export const useSSE = () => {
     const dispatch = useDispatch();
@@ -101,7 +102,7 @@ export const useSSE = () => {
             try {
                 const data = JSON.parse(event.data);
                 console.log('Received initial product data (SSE):', data);
-                //dispatch(setOrders(data));
+                dispatch(setUserProducts(data));
                 // dispatch(setLoading(false));
             } catch (e) {
                 console.error('Error parsing initial SSE data:', e);

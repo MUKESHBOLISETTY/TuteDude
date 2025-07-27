@@ -145,8 +145,8 @@ const mockProducts = [
 ];
 
 const initialState = {
-    userProducts: mockProducts,
-    filteredUserProducts: mockProducts,
+    userProducts: [],
+    filteredUserProducts: [],
     filters: {
         category: 'All Products',
         sortBy: 'rating',
