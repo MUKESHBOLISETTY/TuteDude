@@ -122,7 +122,7 @@ import axios from 'axios';
 import store from '../redux/store';
 import toast from 'react-hot-toast';
 const apiService = axios.create({
-  baseURL: 'http://localhost:4000/api/v1/',
+  baseURL: `${import.meta.env.VITE_BACKEND_BASEURL}`,
   headers: {
     'Content-Type': 'application/json',
   },
