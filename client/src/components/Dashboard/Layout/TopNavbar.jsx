@@ -101,7 +101,7 @@ const TopNavbar = ({ onMenuClick, onCartClick, activeTab, setActiveTab }) => {
                 <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                   <UserIcon className="w-4 h-4 text-green-600" />
                 </div>
-                <span className="hidden md:block text-gray-700 font-medium">{user?.name}</span>
+                <span className="hidden md:block text-gray-700 font-medium">{user?.username}</span>
                 <ChevronDownIcon className="w-4 h-4 text-gray-400" />
               </button>
 
