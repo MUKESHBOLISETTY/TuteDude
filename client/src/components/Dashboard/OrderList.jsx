@@ -4,8 +4,6 @@ import { ClipboardDocumentListIcon, TruckIcon, CheckCircleIcon, XCircleIcon } fr
 import { useSelector } from 'react-redux';
 
 const OrderList = () => {
-  // Assuming the Redux store structure, adjust if your actual store differs.
-  // In a pure JSX context, the type annotation for RootState is removed.
   const { orders } = useSelector((state) => state.user);
 
   const getStatusIcon = (status) => {

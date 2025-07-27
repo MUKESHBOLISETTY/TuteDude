@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon, StarIcon } from '@heroicons/react/24/solid';
 import { StarIcon as StarOutlineIcon } from '@heroicons/react/24/outline';
 
-// This is a simple message box component to replace alert()
 const MessageBox = ({ message, onClose }) => {
   if (!message) return null;
 

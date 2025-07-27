@@ -2,12 +2,10 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon, MinusIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
-// RootState import is removed as it's TypeScript specific
-import { removeFromCart, updateQuantity, clearCart } from '../../store/slices/cartSlice';
+import { removeFromCart, updateQuantity, clearCart } from '../../redux/supplier/cartSlice';
 
 const CartSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  // Type annotation for useSelector state is removed for JSX conversion
   const { items, total, itemCount } = useSelector((state) => state.cart);
 
   const handleQuantityChange = (id, newQuantity) => {

@@ -3,9 +3,7 @@ import { motion } from 'framer-motion';
 import { StarIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/solid';
 import { StarIcon as StarOutlineIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../../store/slices/cartSlice';
-// The 'Product' interface/type is removed as it's TypeScript specific.
-// Assuming the data structure for 'product' is consistent with the original.
+import { addToCart } from '../../../redux/supplier/cartSlice';
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
