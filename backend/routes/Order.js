@@ -12,7 +12,7 @@ const limiter = rateLimit({
 
 })
 
-router.post("/createOrder",authenticateUser, createOrder);
+router.post("/createOrder", authenticateUser, createOrder);
 
 router.delete("/deleteOrder", limiter, authenticateUser, deleteOrder);
 
