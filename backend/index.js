@@ -7,9 +7,15 @@ import fileUpload from 'express-fileupload';
 import userRoutes from './routes/User.js';
 import productRoutes from './routes/Product.js';
 import orderRoutes from './routes/Order.js';
+import bodyParser from 'body-parser';
+
+
 
 const app = express();
 const port = 4000;
+
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 connect();
 
