@@ -55,7 +55,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
       })),
       subtotal: total,
       totalprice: total + (total * 0.18),
-      deliveryStatus: "confirmed",
+      deliveryStatus: "packed",
       status: "processing"
     };
 
