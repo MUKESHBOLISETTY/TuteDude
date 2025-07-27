@@ -76,13 +76,6 @@ const HomePage = () => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">All Products</h2>
           
-          {/* Test Feedback Button */}
-          <button
-            onClick={() => openFeedbackModal('fresh-farm-co', 'Fresh Farm Co.')}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-          >
-            Rate Seller (Demo)
-          </button>
         </div>
         
         <ProductGrid />

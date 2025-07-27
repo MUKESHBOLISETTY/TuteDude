@@ -122,7 +122,7 @@ import axios from 'axios';
 import store from '../redux/store';
 import toast from 'react-hot-toast';
 const apiService = axios.create({
-  baseURL: 'http://localhost:4000/api/v1/',
+  baseURL: `https://tute-dude-three.vercel.app/api/v1`,
   headers: {
     'Content-Type': 'application/json',
   },
