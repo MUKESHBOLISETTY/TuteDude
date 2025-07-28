@@ -47,9 +47,7 @@ export const useSSE = () => {
                 // Add navigation based on user type
                 if (data.type === 'Buyer') {
                     navigate('/', { replace: true });
-                } else if (data.type === 'Seller') {
-                    navigate('/supplier', { replace: true });
-                }
+                } 
             } catch (e) {
                 console.error('Error parsing initial SSE data:', e);
                 dispatch(setError('Failed to parse initial user data.'));
